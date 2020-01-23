@@ -43,6 +43,7 @@
       }
 
       #save-button-container {
+        margin-top: 40px;
         text-align: center;
       }
 
@@ -87,6 +88,14 @@
         text-anchor: middle;
         font-weight: bold;
         font-size: 8px;
+        font-family: "Graphik Bold";
+      }
+
+      .labels-theme-text {
+        fill: white;
+        text-anchor: middle;
+        font-weight: bold;
+        font-size: 12px;
         font-family: "Graphik Bold";
       }
 
@@ -437,7 +446,7 @@
       }
 
       #button-16 .knobs:before {
-        content: "Maturity";
+        content: "Year";
         position: absolute;
         top: 4px;
         left: 4px;
@@ -497,7 +506,7 @@
       }
 
       #button-16 .checkbox:checked + .knobs:before {
-        content: "Year";
+        content: "Maturity";
         left: 46px;
         background-color: #ea3b66;
       }
@@ -505,6 +514,18 @@
       #button-17 .checkbox:checked ~ .layer,
       #button-16 .checkbox:checked ~ .layer {
         background-color: #fcebeb;
+      }
+
+      i {
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 2px;
+      }
+
+      .down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
       }
     </style>
   </head>
@@ -528,7 +549,9 @@
           </div>
 
           <div class="dropdown-industry">
-            <button class="dropbtn">Select Industry</button>
+            <button class="dropbtn">
+              <i class="arrow down"></i> Select Industry
+            </button>
             <div class="dropdown-content" id="industry-selector"></div>
           </div>
         </div>
@@ -542,12 +565,12 @@
 
     <script>
       var width = 800,
-        height = 780,
+        height = 860,
         innerRadius = 50,
         outerRadius = 300,
         keySize = 10,
         keySpacing = 10,
-        radial = "maturity",
+        radial = "year",
         animationDuration = 2000,
         keyWidth = 140,
         keyHeight = 425,
@@ -594,7 +617,7 @@
         .append("g")
         .attr(
           "transform",
-          "translate(" + width / 2 + "," + (height / 2 + 50) + ")"
+          "translate(" + width / 2 + "," + (height / 2 + 20) + ")"
         );
 
       var keySVG = d3
@@ -630,26 +653,24 @@
         .attr("y", -titleLogoHeight / 2)
         .attr("x", -titleLogoWidth / 2);
 
+      //CHANGE HERE:
       var focusAreaOrder = [
-        "exploration",
-        "build",
-        "asset health",
-        "optimisation",
-        "automation",
-        "safety",
-        "local resources",
-        "decarbonisation",
-        "circular economy",
-        "supply",
-        "construction",
-        "specialist services"
-      ];
+        "advanced project management",
+        "carbon capture",
+        "new cement",
+        "water management",
+        "predictive maintenance",
+        "operations intelligence"];
+
+      //CHANGE HERE:
+      var themeOrder = [
+      "Executional Excellence", "Sustainable Leadership", "Smart, Autonomous Operations"]
 
       d3.csv(
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1229685170&single=true&output=csv",
         function(data) {
           d3.csv(
-            "https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1133714981&single=true&output=csv",
+            "https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1031411244&single=true&output=csv",
             function(desc) {
               data = data.filter(function(d) {
                 return d["Inc. Radar"] === "TRUE";
@@ -662,15 +683,7 @@
                 return d["Founded"] !== "";
               });
 
-              data = data.filter(function(d) {
-                return d["Founded"] !== "1983";
-              });
-
-              data = data.filter(function(d) {
-                return d["Founded"] !== "1980";
-              });
-
-              console.log(data);
+              console.log(desc);
 
               // correct formatting of total funding values to numbers
               data.forEach(function(d) {
@@ -683,6 +696,14 @@
                 }
 
                 d["Opportunity Space"] = d["Opportunity Space"].toLowerCase();
+
+                desc.forEach(function(v) {
+                  if (d["Opportunity Space"] === v["Opportunity Space"].toLowerCase()) {
+                    d["Themes"] = v["Themes"]
+                    d["Theme Definition"] = v["Theme Definition"]
+                  }
+                })
+                
               });
 
               /* var oppSpace_order = [
@@ -696,6 +717,8 @@
             ];
 
             */
+
+
 
               function focusAreaSort(a, b) {
                 for (i = 0; i < focusAreaOrder.length; i++) {
@@ -715,22 +738,43 @@
                   : NaN;
               }
 
+              //CHANGE HERE:
+              function themeSort(a, b) {
+                for (i = 0; i < themeOrder.length; i++) {
+                  if (a === themeOrder[i]) {
+                    var valA = i;
+                  }
+                  if (b === themeOrder[i]) {
+                    var valB = i;
+                  }
+                }
+                return valA < valB
+                  ? -1
+                  : valA > valB
+                  ? 1
+                  : valA >= valB
+                  ? 0
+                  : NaN;
+              }
+
+              console.log(focusAreaOrder)
+
+              //CHANGE HERE:
               var focusAreaeBandColorScale = d3
                 .scaleOrdinal()
                 .domain(focusAreaOrder)
                 .range([
                   "#5FBDFB",
-                  "#5FBDFB",
-                  "#5FBDFB",
+                  //"#5FBDFB",
                   "#EA3B66",
                   "#EA3B66",
                   "#EA3B66",
-                  "#5DDA86",
-                  "#5DDA86",
-                  "#5DDA86",
+                  //"#5DDA86",
+                  //"#5DDA86",
+                 // "#5DDA86",
                   "#F5D932",
-                  "#F5D932",
-                  "#F5D932"
+                 "#F5D932",
+                 // "#F5D932"
                 ]);
 
               /*
@@ -813,6 +857,9 @@
                 })
                 .entries(data);
 
+              console.log(data)
+
+
               var count_by_focus_area = d3
                 .nest()
                 .key(function(d) {
@@ -820,6 +867,16 @@
                 })
                 .sortKeys(focusAreaSort)
                 .entries(data);
+
+              var count_by_themes = d3
+                .nest()
+                .key(function(d) {
+                  return d["Themes"];
+                })
+                .sortKeys(themeSort)
+                .entries(data);
+
+                              console.log(count_by_themes)
 
               var count_by_maturity = d3
                 .nest()
@@ -931,12 +988,30 @@
                 .innerRadius(maturity_list[2].inner)
                 .outerRadius(maturity_list[2].outer);
 
+              var themeArc = d3
+                .arc()
+                .innerRadius(330)
+                .outerRadius(360)
+
               var chartPie = d3
                 .pie()
                 .value(function(d) {
                   return d.value.value + 2000000000000;
                 })
                 .sort(focusAreaSort);
+
+              //CHANGE HERE:
+              var outerChartPie = d3
+                .pie()
+                .value(function(d) {
+                  var number_of_opp_spaces = [... new Set (d.value.values.map(function(v) {
+                    return v["Opportunity Space"]
+                  }))]
+                  return number_of_opp_spaces.length
+                })
+                .sort(themeSort)
+
+              var outerChartPieData = outerChartPie(d3.entries(count_by_themes));
 
               var chartPieData = chartPie(d3.entries(focusAreaSorted));
 
@@ -960,7 +1035,13 @@
                 "#7A7A7A"
               ]); */
 
-              industryList = ["All Startups", "Cement", "Mining", "Both"];
+              industryList = [
+                "All Startups",
+                "Cement",
+                "Mining",
+                "Both",
+                "Alternative"
+              ];
 
               var industrySelector = d3
                 .select("#industry-selector")
@@ -975,6 +1056,19 @@
                   update_opacity(d);
                   industryFilter = d;
                 });
+
+              var themeSegments = chartSVG
+                .selectAll("theme-segments")
+                .data(outerChartPieData)
+                .enter()
+                .append("path")
+                .attr("d", themeArc)
+                .attr("fill", function(d) {
+                  return focusAreaeBandColorScale(d.data.value.values[0]["Opportunity Space"])
+                })
+                .style("stroke", "white")
+                .style("stroke-width", "2px")
+
 
               var backgroundSegments = chartSVG
                 .selectAll("background-segments")
@@ -1087,12 +1181,12 @@
                 .on("click", function(d) {
                   if (filterKey === d.data.value.key) {
                     filterKey = "";
-                    updateNodes("opportunity space", filterKey);
+                    updateNodes("focus area", filterKey);
                     d3.selectAll(".label-mouse-over-text-clicked").remove();
                     d3.selectAll(".hover-svg-background-clicked").remove();
                   } else {
                     filterKey = d.data.value.key;
-                    updateNodes("opportunity space", filterKey);
+                    updateNodes("focus area", filterKey);
                     hoverInfoFunction(d, "-clicked");
                   }
                 });
@@ -1172,6 +1266,43 @@
                   } else {
                     return result[1];
                   }
+                });
+
+              var labelThemeRadius = outerRadius + 40
+
+              var labelsTheme = chartSVG.append("g").classed("labels-theme", true);
+
+              labelsTheme
+                .append("def")
+                .append("path")
+                .attr("id", "labels-theme-path")
+                .attr(
+                  "d",
+                  "m0 " +
+                    -labelThemeRadius +
+                    " a" +
+                    labelThemeRadius +
+                    " " +
+                    labelThemeRadius +
+                    " 0 1,1 -0.01 0"
+                );
+
+              labelsTheme
+                .selectAll("text")
+                .data(outerChartPieData)
+                .enter()
+                .append("text")
+                .attr("class", "labels-theme-text")
+                .append("textPath")
+                .attr("xlink:href", "#labels-theme-path")
+                .attr("startOffset", function(d, i) {
+                  var percentage =
+                    ((d.endAngle - d.startAngle) / 2 + d.startAngle) /
+                    0.0628319;
+                  return percentage + "%";
+                })
+                .text(function(d) {
+                  return d.data.value.key.toUpperCase()
                 });
 
               /* var key = keySVG
@@ -1460,6 +1591,32 @@
                 { name: "Distant", fn: distantLabel }
               ];
 
+              maturity_list.forEach(function(d) {
+                var id = "#" + d.name.toLowerCase() + "-label-path-text";
+                d3.select(id).remove();
+              });
+
+              count_by_year.forEach(function(d) {
+                d.fn
+                  .append("text")
+                  .attr("class", "year-label-text")
+                  .attr("id", "year-" + d.key + "-label-path-text")
+                  .append("textPath")
+                  .attr("xlink:href", "#year-" + d.key + "-label-path")
+                  .attr("startOffset", "50%")
+                  .text(d.key);
+
+                chartPieData.forEach(function(v) {
+                  d3.select(
+                    "#year-" +
+                      d.key +
+                      "-" +
+                      v.data.value.key.replace(/ /g, "-").replace(/&/g, "and") +
+                      "-segment"
+                  ).attr("opacity", 1);
+                });
+              });
+
               var nodeData = d3
                 .nest()
                 .key(function(d) {
@@ -1621,6 +1778,8 @@
               });
               */
 
+              //switchRadial();
+
               d3.select("#switch-button-maturity").on("click", function() {
                 if (radial !== "maturity") {
                   switchRadial();
@@ -1667,15 +1826,18 @@
                 })
                 .attr("class", "nodes")
                 .attr("r", function(d) {
-                  if (d["Funding Stage"] !== "Acquired" && d["Activity/Acquisition Time"] == "") {
-                    return 3.4;
+                  if (
+                    d["Funding Stage"] !== "Acquired" &&
+                    d["Activity/Acquisition Time"] == ""
+                  ) {
+                    return 2.4;
                   }
                 })
                 .attr("cx", function(d) {
-                  return d.x;
+                  return d.yearX;
                 })
                 .attr("cy", function(d) {
-                  return d.y;
+                  return d.yearY;
                 })
                 .attr("fill", function(d) {
                   return nodeColorScale(
@@ -1702,8 +1864,12 @@
                   return d["Startup"].toLowerCase().replace(/ /g, "-");
                 })
                 .attr("points", function(d) {
-                  var points = [[d.x,d.y], [d.x,d.y], [d.x,d.y]]
-                  return points
+                  var points = [
+                    [d.yearX, d.yearY],
+                    [d.yearX, d.yearY],
+                    [d.yearX, d.yearY]
+                  ];
+                  return points;
                 })
                 .attr("fill", "#7C436A")
                 .on("mouseover", function(d) {
@@ -1743,7 +1909,9 @@
                 .attr("y", 0)
                 .attr("fill", "#FFFD82")
                 .attr("transform", function(d) {
-                  return "translate(" + d.x + "," + d.y + ")    rotate(45)";
+                  return (
+                    "translate(" + d.yearX + "," + d.yearY + ")    rotate(45)"
+                  );
                 })
                 .on("mouseover", function(d) {
                   nodeMouseOver(d);
@@ -1886,7 +2054,7 @@
 
                   keyActivity.attr("opacity", 0.3);
                 }
-                if (type === "opportunity space" && filterKey !== "") {
+                if (type === "focus area" && filterKey !== "") {
                   nodes.attr("opacity", function(d) {
                     if (d["Opportunity Space"].toLowerCase() !== filterKey) {
                       d.opacity = 0.3;
@@ -1927,7 +2095,11 @@
                     .append("polygon")
                     .classed("key-item-other", true)
                     .attr("id", "activity-key")
-                    .attr("points", [[0, -4.7], [-4.2, 3.7], [4.2, 3.7]])
+                    .attr("points", [
+                      [0, -4.7],
+                      [-4.2, 3.7],
+                      [4.2, 3.7]
+                    ])
                     .attr("dy", -10)
                     .attr("dx", 10)
                     .attr("fill", "#7C436A")
@@ -1989,13 +2161,21 @@
                   .duration(animationDuration * 0.7)
                   .attrTween("r", function(d) {
                     var startR = d3.select(this).attr("r");
-                    if ((d["Competitor"] === "" || d["Activity/Acquisition Time"] != "") && CompetitorMode === 1) {
+                    if (
+                      (d["Competitor"] === "" ||
+                        d["Activity/Acquisition Time"] != "") &&
+                      CompetitorMode === 1
+                    ) {
                       d.hide = true;
                     }
                     if (CompetitorMode === 0) {
                       d.hide = false;
                     }
-                    if (d.hide === true || d["Funding Stage"] === "Acquired" || d["Activity/Acquisition Time"] != "") {
+                    if (
+                      d.hide === true ||
+                      d["Funding Stage"] === "Acquired" ||
+                      d["Activity/Acquisition Time"] != ""
+                    ) {
                       endR = 0;
                     } else {
                       endR = 3.4;
@@ -2011,18 +2191,33 @@
                   .duration(animationDuration * 0.7)
                   .attrTween("points", function(d) {
                     var currentPoints = d3.select(this).attr("points");
-                    var pList = currentPoints.split(",")
-                    var startPoints = [[+pList[0], +pList[1]], [+pList[2], +pList[3]], [+pList[4], +pList[5]]]
-                    if ((d["Activity/Acquisition Time"] != "") && CompetitorMode === 1) {
-                      var endPoints = [[d.x, d.y-4.7], [d.x-4.2, d.y+3.7], [d.x+4.2, d.y+3.7]]
+                    var pList = currentPoints.split(",");
+                    var startPoints = [
+                      [+pList[0], +pList[1]],
+                      [+pList[2], +pList[3]],
+                      [+pList[4], +pList[5]]
+                    ];
+                    if (
+                      d["Activity/Acquisition Time"] != "" &&
+                      CompetitorMode === 1
+                    ) {
+                      var endPoints = [
+                        [d.x, d.y - 4.7],
+                        [d.x - 4.2, d.y + 3.7],
+                        [d.x + 4.2, d.y + 3.7]
+                      ];
                     } else {
-                      var endPoints = [[d.x,d.y], [d.x,d.y], [d.x,d.y]]
+                      var endPoints = [
+                        [d.x, d.y],
+                        [d.x, d.y],
+                        [d.x, d.y]
+                      ];
                     }
-                    var i = d3.interpolateArray(startPoints, endPoints)
+                    var i = d3.interpolateArray(startPoints, endPoints);
                     return function(t) {
-                      return i(t)
-                    }
-                  })
+                      return i(t);
+                    };
+                  });
 
                 nodes_acquired
                   .transition()
@@ -2093,20 +2288,35 @@
                   .duration(animationDuration * 0.7)
                   .attrTween("points", function(d) {
                     var currentPoints = d3.select(this).attr("points");
-                    var pList = currentPoints.split(",")
-                    var startPoints = [[+pList[0], +pList[1]], [+pList[2], +pList[3]], [+pList[4], +pList[5]]]
+                    var pList = currentPoints.split(",");
+                    var startPoints = [
+                      [+pList[0], +pList[1]],
+                      [+pList[2], +pList[3]],
+                      [+pList[4], +pList[5]]
+                    ];
 
-                    if (((d["Activity/Acquisition Time"] != "") && CompetitorMode === 1) && (d["Industry"] === type || type === "All Startups")) {
-                      var endPoints = [[d.x, d.y-4.7], [d.x-4.2, d.y+3.7], [d.x+4.2, d.y+3.7]]
+                    if (
+                      d["Activity/Acquisition Time"] != "" &&
+                      CompetitorMode === 1 &&
+                      (d["Industry"] === type || type === "All Startups")
+                    ) {
+                      var endPoints = [
+                        [d.x, d.y - 4.7],
+                        [d.x - 4.2, d.y + 3.7],
+                        [d.x + 4.2, d.y + 3.7]
+                      ];
                     } else {
-                      var endPoints = [[d.x,d.y], [d.x,d.y], [d.x,d.y]]
+                      var endPoints = [
+                        [d.x, d.y],
+                        [d.x, d.y],
+                        [d.x, d.y]
+                      ];
                     }
-                    var i = d3.interpolateArray(startPoints, endPoints)
+                    var i = d3.interpolateArray(startPoints, endPoints);
                     return function(t) {
-                      return i(t)
-                    }
-                  })
-
+                      return i(t);
+                    };
+                  });
 
                 nodes_acquired
                   .transition()
@@ -2188,9 +2398,7 @@
                       var i = d3.interpolate(0, d.yearX - d.x);
                       var j = d3.interpolate(0, d.yearY - d.y);
                       return function(t) {
-                        return (
-                          "translate(" + i(t) + "," + j(t) + ")"
-                        );
+                        return "translate(" + i(t) + "," + j(t) + ")";
                       };
                     });
 
@@ -2269,9 +2477,7 @@
                       var i = d3.interpolate(d.yearX - d.x, 0);
                       var j = d3.interpolate(d.yearY - d.y, 0);
                       return function(t) {
-                        return (
-                          "translate(" + i(t) + "," + j(t) + ")"
-                        );
+                        return "translate(" + i(t) + "," + j(t) + ")";
                       };
                     });
 
@@ -2328,6 +2534,44 @@
                 }
               }
 
+              function text_wrap(entry) {
+                limit = 20;
+                entryList = entry.split(/\s+/);
+                lines = [];
+                current_seq_len = 0;
+                current_seq = [];
+                for (i = 0; i < entryList.length; i++) {
+                  current_seq_len += entryList[i].length;
+                  current_seq.push(entryList[i].replace(/�۪/g, "'"));
+                  if (current_seq_len > limit) {
+                    lines.push(current_seq);
+                    current_seq_len = 0;
+                    current_seq = [];
+                  }
+                }
+                lines.push(current_seq);
+                results = "";
+                x = 0;
+                for (i = 0; i < lines.length; i++) {
+                  tmp = "";
+                  for (j = 0; j < lines[i].length; j++) {
+                    if (j !== lines[i].length - 1) {
+                      tmp += lines[i][j] + " ";
+                    } else {
+                      tmp += lines[i][j];
+                    }
+                  }
+                                    results +=
+                    "<tspan x=" +
+                    x +
+                    " dy='1.1em' class='funding-hover-info'>" +
+                    tmp +
+                    "</tspan>";
+                }
+                  return results
+                  
+              }
+
               function hoverInfoFunction(segment_data, clicked = "") {
                 var segmentDesc;
 
@@ -2339,39 +2583,8 @@
                     segmentDesc = v.Description;
                   }
                 });
-                limit = 20;
-                segmentDesc = segmentDesc.split(/\s+/);
-                lines = [];
-                current_seq_len = 0;
-                current_seq = [];
-                for (i = 0; i < segmentDesc.length; i++) {
-                  current_seq_len += segmentDesc[i].length;
-                  current_seq.push(segmentDesc[i].replace(/�۪/g, "'"));
-                  if (current_seq_len > limit) {
-                    lines.push(current_seq);
-                    current_seq_len = 0;
-                    current_seq = [];
-                  }
-                }
-                lines.push(current_seq);
-                descFormatted = "";
-                x = 0;
-                for (i = 0; i < lines.length; i++) {
-                  tmp = "";
-                  for (j = 0; j < lines[i].length; j++) {
-                    if (j !== lines[i].length - 1) {
-                      tmp += lines[i][j] + " ";
-                    } else {
-                      tmp += lines[i][j];
-                    }
-                  }
-                  descFormatted +=
-                    "<tspan x=" +
-                    x +
-                    " dy='1.1em' class='funding-hover-info'>" +
-                    tmp +
-                    "</tspan>";
-                }
+
+                descFormatted = text_wrap(segmentDesc)
                 hoverSVG
                   .append("rect")
                   .attr("width", 200)
@@ -2396,6 +2609,8 @@
                         segment_data.data.value.key
                       ) {
                         numberOfStartups = count_by_focus_area[i].values.length;
+                        theme = count_by_focus_area[i].values[0]["Themes"]
+                        themeDesc = count_by_focus_area[i].values[0]["Theme Definition"]
                         segmentFunding = d3.sum(
                           count_by_focus_area[i].values,
                           function(d) {
@@ -2409,6 +2624,7 @@
                     } else {
                       var avgFunding = segmentFunding / numberOfStartups;
                     }
+                    themeDesc = text_wrap(themeDesc)
 
                     line0 =
                       "<tspan x=" +
@@ -2452,6 +2668,23 @@
                       " dy='1.1em' class='funding-hover-info amount'>$" +
                       formatFunding(avgFunding) +
                       "</tspan>";
+                    line7 =
+                      "<tspan x=" +
+                      x +
+                      " dy='1.7em' class='funding-hover-info'>Theme:</tspan>";
+                    line8 = "<tspan x=" +
+                      x +
+                      " dy='1.1em' class='funding-hover-info'>" +
+                      theme +
+                      "</tspan>";
+                    line9 =
+                      "<tspan x=" +
+                      x +
+                      " dy='1.7em' class='funding-hover-info'>Theme Definition:</tspan>";
+                    line10 =
+                      "<tspan x=" +
+                      x +
+                      " dy='1.7em' class='funding-hover-info'>" + themeDesc + "</tspan>";
                     return (
                       line0 +
                       descFormatted +
@@ -2460,7 +2693,11 @@
                       line3 +
                       line4 +
                       line5 +
-                      line6
+                      line6 + 
+                      line7 +
+                      line8 +
+                      line9 +
+                      line10
                     );
                   });
 
@@ -2562,9 +2799,7 @@
                   });
 
                   nodes_activity.attr("opacity", function(d) {
-                    if (
-                      d["Activity/Acquisition Time"] != ""  
-                    ) {
+                    if (d["Activity/Acquisition Time"] != "") {
                       return 1;
                     } else {
                       return 0.3;
@@ -3417,7 +3652,7 @@
               Math.pow(nodeList[l][0] - tmp_x, 2) +
                 Math.pow(nodeList[l][1] - tmp_y, 2)
             );
-            if (distance <= 6) {
+            if (distance <= 2) {
               distanceCheck = 1;
             }
           }
