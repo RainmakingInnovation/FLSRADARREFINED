@@ -1066,6 +1066,7 @@
                 .attr("fill", function(d) {
                   return focusAreaeBandColorScale(d.data.value.values[0]["Opportunity Space"])
                 })
+                .style("opacity", "0.7")
                 .style("stroke", "white")
                 .style("stroke-width", "2px")
 
@@ -1444,6 +1445,110 @@
                     updateNodes("key", filterKey);
                   }
                 });
+
+                keyActivity = keySVG
+                    .append("g")
+                    .attr("transform", "translate(-50,140)")
+                    .style("display", "none")
+
+                  keyActivity
+                    .append("polygon")
+                    .classed("key-item-other", true)
+                    .attr("id", "activity-key")
+                    .attr("points", [
+                      [0, -4.7],
+                      [-4.2, 3.7],
+                      [4.2, 3.7]
+                    ])
+                    .attr("dy", -10)
+                    .attr("dx", 10)
+                    .attr("fill", "#7C436A")
+                    .attr("opacity", function() {
+                      if (filterKey === "") {
+                        return 1;
+                      } else {
+                        return 0.3;
+                      }
+                    })
+                    .on("mouseover", function() {
+                      keyMouseOver("", "activity");
+                    })
+                    .on("mouseout", keyMouseOut)
+                    .on("click", function() {
+                      if (filterKey === "activity") {
+                        filterKey = "";
+                        updateNodes("", filterKey);
+                      } else {
+                        filterKey = "activity";
+                        updateNodes("", filterKey);
+                      }
+                    });
+
+                  keyActivity
+                    .append("text")
+                    .text("Activity")
+                    .classed("key-labels key-label", true)
+                    .attr("id", "activity-key-label")
+                    .attr("dx", "1.8em")
+                    .attr("dy", "0.3em")
+                    .attr("opacity", function() {
+                      if (filterKey === "") {
+                        return 1;
+                      } else {
+                        return 0.3;
+                      }
+                    })
+                    .on("mouseover", function() {
+                      keyMouseOver("", "activity");
+                    })
+                    .on("mouseout", keyMouseOut)
+                    .on("click", function() {
+                      if (filterKey === "activity") {
+                        filterKey = "";
+                        updateNodes("", filterKey);
+                      } else {
+                        filterKey = "activity";
+                        updateNodes("", filterKey);
+                      }
+                    });
+
+                  keyInvestment = keySVG
+                    .append("g")
+                    .attr("transform", "translate(-50,120)")
+                    .style("display", "none")
+
+                  keyInvestment
+                    .append("circle")
+                    .classed("key-item-other", true)
+                    .attr("id", "investment-key")
+                    .attr("cx", 0)
+                    .attr("cy", 0)
+                    .attr("r", 4.4)
+                    .attr("dy", -10)
+                    .attr("dx", 10)
+                    .attr("fill", "none")
+                    .attr("opacity", function() {
+                      if (filterKey === "") {
+                        return 1;
+                      } else {
+                        return 0.3;
+                      }
+                    })
+
+                  keyInvestment
+                    .append("text")
+                    .text("Investment")
+                    .classed("key-labels key-label", true)
+                    .attr("id", "investment-key-label")
+                    .attr("dx", "1.8em")
+                    .attr("dy", "0.3em")
+                    .attr("opacity", function() {
+                      if (filterKey === "") {
+                        return 1;
+                      } else {
+                        return 0.3;
+                      }
+                    })
 
               var keyTitle = keySVG
                 .append("text")
@@ -2087,73 +2192,16 @@
 
               function switch_competitors() {
                 if (CompetitorMode === 1) {
-                  keyActivity = keySVG
-                    .append("g")
-                    .attr("transform", "translate(-50,197)");
+                  keyOther.style("display", "none")
+                  keyInvestment.style("display", "")
+                  keyActivity.style("display", "")
+                  keyAcquired.attr("transform", "translate(-45,161)")
 
-                  keyActivity
-                    .append("polygon")
-                    .classed("key-item-other", true)
-                    .attr("id", "activity-key")
-                    .attr("points", [
-                      [0, -4.7],
-                      [-4.2, 3.7],
-                      [4.2, 3.7]
-                    ])
-                    .attr("dy", -10)
-                    .attr("dx", 10)
-                    .attr("fill", "#7C436A")
-                    .attr("opacity", function() {
-                      if (filterKey === "") {
-                        return 1;
-                      } else {
-                        return 0.3;
-                      }
-                    })
-                    .on("mouseover", function() {
-                      keyMouseOver("", "activity");
-                    })
-                    .on("mouseout", keyMouseOut)
-                    .on("click", function() {
-                      if (filterKey === "activity") {
-                        filterKey = "";
-                        updateNodes("", filterKey);
-                      } else {
-                        filterKey = "activity";
-                        updateNodes("", filterKey);
-                      }
-                    });
-
-                  keyActivity
-                    .append("text")
-                    .text("Activity")
-                    .classed("key-labels key-label", true)
-                    .attr("id", "activity-key-label")
-                    .attr("dx", "1.8em")
-                    .attr("dy", "0.3em")
-                    .attr("opacity", function() {
-                      if (filterKey === "") {
-                        return 1;
-                      } else {
-                        return 0.3;
-                      }
-                    })
-                    .on("mouseover", function() {
-                      keyMouseOver("", "activity");
-                    })
-                    .on("mouseout", keyMouseOut)
-                    .on("click", function() {
-                      if (filterKey === "activity") {
-                        filterKey = "";
-                        updateNodes("", filterKey);
-                      } else {
-                        filterKey = "activity";
-                        updateNodes("", filterKey);
-                      }
-                    });
                 } else {
-                  d3.select("#activity-key").remove();
-                  d3.select("#activity-key-label").remove();
+                  keyActivity.style("display", "none")
+                  keyInvestment.style("display", "none")
+                  keyOther.style("display", "")
+                  keyAcquired.attr("transform", "translate(-45,180)")
                 }
 
                 nodes
