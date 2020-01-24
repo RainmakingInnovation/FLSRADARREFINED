@@ -660,11 +660,15 @@
         "new cement",
         "water management",
         "predictive maintenance",
-        "operations intelligence"];
+        "operations intelligence"
+      ];
 
       //CHANGE HERE:
       var themeOrder = [
-      "Executional Excellence", "Sustainable Leadership", "Smart, Autonomous Operations"]
+        "Executional Excellence",
+        "Sustainable Leadership",
+        "Smart, Autonomous Operations"
+      ];
 
       d3.csv(
         "https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1229685170&single=true&output=csv",
@@ -698,12 +702,14 @@
                 d["Opportunity Space"] = d["Opportunity Space"].toLowerCase();
 
                 desc.forEach(function(v) {
-                  if (d["Opportunity Space"] === v["Opportunity Space"].toLowerCase()) {
-                    d["Themes"] = v["Themes"]
-                    d["Theme Definition"] = v["Theme Definition"]
+                  if (
+                    d["Opportunity Space"] ===
+                    v["Opportunity Space"].toLowerCase()
+                  ) {
+                    d["Themes"] = v["Themes"];
+                    d["Theme Definition"] = v["Theme Definition"];
                   }
-                })
-                
+                });
               });
 
               /* var oppSpace_order = [
@@ -717,8 +723,6 @@
             ];
 
             */
-
-
 
               function focusAreaSort(a, b) {
                 for (i = 0; i < focusAreaOrder.length; i++) {
@@ -757,7 +761,7 @@
                   : NaN;
               }
 
-              console.log(focusAreaOrder)
+              console.log(focusAreaOrder);
 
               //CHANGE HERE:
               var focusAreaeBandColorScale = d3
@@ -771,10 +775,10 @@
                   "#EA3B66",
                   //"#5DDA86",
                   //"#5DDA86",
-                 // "#5DDA86",
+                  // "#5DDA86",
                   "#F5D932",
-                 "#F5D932",
-                 // "#F5D932"
+                  "#F5D932"
+                  // "#F5D932"
                 ]);
 
               /*
@@ -857,8 +861,7 @@
                 })
                 .entries(data);
 
-              console.log(data)
-
+              console.log(data);
 
               var count_by_focus_area = d3
                 .nest()
@@ -876,7 +879,7 @@
                 .sortKeys(themeSort)
                 .entries(data);
 
-                              console.log(count_by_themes)
+              console.log(count_by_themes);
 
               var count_by_maturity = d3
                 .nest()
@@ -991,7 +994,7 @@
               var themeArc = d3
                 .arc()
                 .innerRadius(330)
-                .outerRadius(360)
+                .outerRadius(360);
 
               var chartPie = d3
                 .pie()
@@ -1004,14 +1007,20 @@
               var outerChartPie = d3
                 .pie()
                 .value(function(d) {
-                  var number_of_opp_spaces = [... new Set (d.value.values.map(function(v) {
-                    return v["Opportunity Space"]
-                  }))]
-                  return number_of_opp_spaces.length
+                  var number_of_opp_spaces = [
+                    ...new Set(
+                      d.value.values.map(function(v) {
+                        return v["Opportunity Space"];
+                      })
+                    )
+                  ];
+                  return number_of_opp_spaces.length;
                 })
-                .sort(themeSort)
+                .sort(themeSort);
 
-              var outerChartPieData = outerChartPie(d3.entries(count_by_themes));
+              var outerChartPieData = outerChartPie(
+                d3.entries(count_by_themes)
+              );
 
               var chartPieData = chartPie(d3.entries(focusAreaSorted));
 
@@ -1064,12 +1073,13 @@
                 .append("path")
                 .attr("d", themeArc)
                 .attr("fill", function(d) {
-                  return focusAreaeBandColorScale(d.data.value.values[0]["Opportunity Space"])
+                  return focusAreaeBandColorScale(
+                    d.data.value.values[0]["Opportunity Space"]
+                  );
                 })
                 .style("opacity", "0.7")
                 .style("stroke", "white")
-                .style("stroke-width", "2px")
-
+                .style("stroke-width", "2px");
 
               var backgroundSegments = chartSVG
                 .selectAll("background-segments")
@@ -1269,9 +1279,11 @@
                   }
                 });
 
-              var labelThemeRadius = outerRadius + 40
+              var labelThemeRadius = outerRadius + 40;
 
-              var labelsTheme = chartSVG.append("g").classed("labels-theme", true);
+              var labelsTheme = chartSVG
+                .append("g")
+                .classed("labels-theme", true);
 
               labelsTheme
                 .append("def")
@@ -1303,7 +1315,7 @@
                   return percentage + "%";
                 })
                 .text(function(d) {
-                  return d.data.value.key.toUpperCase()
+                  return d.data.value.key.toUpperCase();
                 });
 
               /* var key = keySVG
@@ -1446,109 +1458,109 @@
                   }
                 });
 
-                keyActivity = keySVG
-                    .append("g")
-                    .attr("transform", "translate(-50,140)")
-                    .style("display", "none")
+              keyActivity = keySVG
+                .append("g")
+                .attr("transform", "translate(-50,140)")
+                .style("display", "none");
 
-                  keyActivity
-                    .append("polygon")
-                    .classed("key-item-other", true)
-                    .attr("id", "activity-key")
-                    .attr("points", [
-                      [0, -4.7],
-                      [-4.2, 3.7],
-                      [4.2, 3.7]
-                    ])
-                    .attr("dy", -10)
-                    .attr("dx", 10)
-                    .attr("fill", "#7C436A")
-                    .attr("opacity", function() {
-                      if (filterKey === "") {
-                        return 1;
-                      } else {
-                        return 0.3;
-                      }
-                    })
-                    .on("mouseover", function() {
-                      keyMouseOver("", "activity");
-                    })
-                    .on("mouseout", keyMouseOut)
-                    .on("click", function() {
-                      if (filterKey === "activity") {
-                        filterKey = "";
-                        updateNodes("", filterKey);
-                      } else {
-                        filterKey = "activity";
-                        updateNodes("", filterKey);
-                      }
-                    });
+              keyActivity
+                .append("polygon")
+                .classed("key-item-other", true)
+                .attr("id", "activity-key")
+                .attr("points", [
+                  [0, -4.7],
+                  [-4.2, 3.7],
+                  [4.2, 3.7]
+                ])
+                .attr("dy", -10)
+                .attr("dx", 10)
+                .attr("fill", "#7C436A")
+                .attr("opacity", function() {
+                  if (filterKey === "") {
+                    return 1;
+                  } else {
+                    return 0.3;
+                  }
+                })
+                .on("mouseover", function() {
+                  keyMouseOver("", "activity");
+                })
+                .on("mouseout", keyMouseOut)
+                .on("click", function() {
+                  if (filterKey === "activity") {
+                    filterKey = "";
+                    updateNodes("", filterKey);
+                  } else {
+                    filterKey = "activity";
+                    updateNodes("", filterKey);
+                  }
+                });
 
-                  keyActivity
-                    .append("text")
-                    .text("Activity")
-                    .classed("key-labels key-label", true)
-                    .attr("id", "activity-key-label")
-                    .attr("dx", "1.8em")
-                    .attr("dy", "0.3em")
-                    .attr("opacity", function() {
-                      if (filterKey === "") {
-                        return 1;
-                      } else {
-                        return 0.3;
-                      }
-                    })
-                    .on("mouseover", function() {
-                      keyMouseOver("", "activity");
-                    })
-                    .on("mouseout", keyMouseOut)
-                    .on("click", function() {
-                      if (filterKey === "activity") {
-                        filterKey = "";
-                        updateNodes("", filterKey);
-                      } else {
-                        filterKey = "activity";
-                        updateNodes("", filterKey);
-                      }
-                    });
+              keyActivity
+                .append("text")
+                .text("Activity")
+                .classed("key-labels key-label", true)
+                .attr("id", "activity-key-label")
+                .attr("dx", "1.8em")
+                .attr("dy", "0.3em")
+                .attr("opacity", function() {
+                  if (filterKey === "") {
+                    return 1;
+                  } else {
+                    return 0.3;
+                  }
+                })
+                .on("mouseover", function() {
+                  keyMouseOver("", "activity");
+                })
+                .on("mouseout", keyMouseOut)
+                .on("click", function() {
+                  if (filterKey === "activity") {
+                    filterKey = "";
+                    updateNodes("", filterKey);
+                  } else {
+                    filterKey = "activity";
+                    updateNodes("", filterKey);
+                  }
+                });
 
-                  keyInvestment = keySVG
-                    .append("g")
-                    .attr("transform", "translate(-50,120)")
-                    .style("display", "none")
+              keyInvestment = keySVG
+                .append("g")
+                .attr("transform", "translate(-50,120)")
+                .style("display", "none");
 
-                  keyInvestment
-                    .append("circle")
-                    .classed("key-item-other", true)
-                    .attr("id", "investment-key")
-                    .attr("cx", 0)
-                    .attr("cy", 0)
-                    .attr("r", 4.4)
-                    .attr("dy", -10)
-                    .attr("dx", 10)
-                    .attr("fill", "none")
-                    .attr("opacity", function() {
-                      if (filterKey === "") {
-                        return 1;
-                      } else {
-                        return 0.3;
-                      }
-                    })
+              keyInvestment
+                .append("circle")
+                .classed("key-item-other", true)
+                .attr("id", "investment-key")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", 4.4)
+                .attr("dy", -10)
+                .attr("dx", 10)
+                .attr("fill", "none")
+                .attr("opacity", function() {
+                  if (filterKey === "") {
+                    return 1;
+                  } else {
+                    return 0.3;
+                  }
+                });
 
-                  keyInvestment
-                    .append("text")
-                    .text("Investment")
-                    .classed("key-labels key-label", true)
-                    .attr("id", "investment-key-label")
-                    .attr("dx", "1.8em")
-                    .attr("dy", "0.3em")
-                    .attr("opacity", function() {
-                      if (filterKey === "") {
-                        return 1;
-                      } else {
-                        return 0.3;
-                      }
-                    })
+              keyInvestment
+                .append("text")
+                .text("Investment")
+                .classed("key-labels key-label", true)
+                .attr("id", "investment-key-label")
+                .attr("dx", "1.8em")
+                .attr("dy", "0.3em")
+                .attr("opacity", function() {
+                  if (filterKey === "") {
+                    return 1;
+                  } else {
+                    return 0.3;
+                  }
+                });
 
               var keyTitle = keySVG
                 .append("text")
@@ -1754,7 +1766,7 @@
                   return d["Opportunity Space"];
                 })
                 .key(function(d) {
-                  return d["Activity/Acquisition Time"];
+                  return d["Founded"];
                 })
                 .rollup(function(v) {
                   return v.length;
@@ -1767,7 +1779,9 @@
               data.forEach(function(d) {
                 //console.log(d);
                 for (i = 0; i < chartPieData.length; i++) {
-                  if (d["Opportunity Space"] === chartPieData[i].data.value.key) {
+                  if (
+                    d["Opportunity Space"] === chartPieData[i].data.value.key
+                  ) {
                     var tmp_startAngleMin = chartPieData[i].startAngle + 0.025;
                     var tmp_endAngleMax = chartPieData[i].endAngle - 0.025;
                     break;
@@ -1808,7 +1822,9 @@
               data.forEach(function(d) {
                 //console.log(d)
                 for (i = 0; i < chartPieData.length; i++) {
-                  if (d["Opportunity Space"] === chartPieData[i].data.value.key) {
+                  if (
+                    d["Opportunity Space"] === chartPieData[i].data.value.key
+                  ) {
                     var tmp_startAngleMin = chartPieData[i].startAngle + 0.025;
                     var tmp_endAngleMax = chartPieData[i].endAngle - 0.025;
                     break;
@@ -1933,7 +1949,7 @@
                 .attr("r", function(d) {
                   if (
                     d["Funding Stage"] !== "Acquired" &&
-                    d["Activity/Acquisition Time"] == ""
+                    d["Competitor Category"] == ""
                   ) {
                     return 2.4;
                   }
@@ -2192,16 +2208,15 @@
 
               function switch_competitors() {
                 if (CompetitorMode === 1) {
-                  keyOther.style("display", "none")
-                  keyInvestment.style("display", "")
-                  keyActivity.style("display", "")
-                  keyAcquired.attr("transform", "translate(-45,161)")
-
+                  keyOther.style("display", "none");
+                  keyInvestment.style("display", "");
+                  keyActivity.style("display", "");
+                  keyAcquired.attr("transform", "translate(-45,161)");
                 } else {
-                  keyActivity.style("display", "none")
-                  keyInvestment.style("display", "none")
-                  keyOther.style("display", "")
-                  keyAcquired.attr("transform", "translate(-45,180)")
+                  keyActivity.style("display", "none");
+                  keyInvestment.style("display", "none");
+                  keyOther.style("display", "");
+                  keyAcquired.attr("transform", "translate(-45,180)");
                 }
 
                 nodes
@@ -2211,7 +2226,7 @@
                     var startR = d3.select(this).attr("r");
                     if (
                       (d["Competitor"] === "" ||
-                        d["Activity/Acquisition Time"] != "") &&
+                        d["Competitor Category"] != "") &&
                       CompetitorMode === 1
                     ) {
                       d.hide = true;
@@ -2222,7 +2237,7 @@
                     if (
                       d.hide === true ||
                       d["Funding Stage"] === "Acquired" ||
-                      d["Activity/Acquisition Time"] != ""
+                      d["Competitor Category"] != ""
                     ) {
                       endR = 0;
                     } else {
@@ -2245,22 +2260,42 @@
                       [+pList[2], +pList[3]],
                       [+pList[4], +pList[5]]
                     ];
-                    if (
-                      d["Activity/Acquisition Time"] != "" &&
-                      CompetitorMode === 1
-                    ) {
-                      var endPoints = [
-                        [d.x, d.y - 4.7],
-                        [d.x - 4.2, d.y + 3.7],
-                        [d.x + 4.2, d.y + 3.7]
-                      ];
+                    if (radial === "maturity") {
+                      if (
+                        d["Competitor Category"] == "Activity" &&
+                        CompetitorMode === 1
+                      ) {
+                        var endPoints = [
+                          [d.x, d.y - 4.7],
+                          [d.x - 4.2, d.y + 3.7],
+                          [d.x + 4.2, d.y + 3.7]
+                        ];
+                      } else {
+                        var endPoints = [
+                          [d.x, d.y],
+                          [d.x, d.y],
+                          [d.x, d.y]
+                        ];
+                      }
                     } else {
-                      var endPoints = [
-                        [d.x, d.y],
-                        [d.x, d.y],
-                        [d.x, d.y]
-                      ];
+                      if (
+                        d["Competitor Category"] == "Activity" &&
+                        CompetitorMode === 1
+                      ) {
+                        var endPoints = [
+                          [d.yearX, d.yearY - 4.7],
+                          [d.yearX - 4.2, d.yearY + 3.7],
+                          [d.yearX + 4.2, d.yearY + 3.7]
+                        ];
+                      } else {
+                        var endPoints = [
+                          [d.yearX, d.yearY],
+                          [d.yearX, d.yearY],
+                          [d.yearX, d.yearY]
+                        ];
+                      }
                     }
+
                     var i = d3.interpolateArray(startPoints, endPoints);
                     return function(t) {
                       return i(t);
@@ -2443,8 +2478,8 @@
                     .transition()
                     .duration(animationDuration)
                     .attrTween("transform", function(d) {
-                      var i = d3.interpolate(0, d.yearX - d.x);
-                      var j = d3.interpolate(0, d.yearY - d.y);
+                      var i = d3.interpolate(d.x - d.yearX, 0);
+                      var j = d3.interpolate(d.y - d.yearY, 0);
                       return function(t) {
                         return "translate(" + i(t) + "," + j(t) + ")";
                       };
@@ -2522,8 +2557,8 @@
                     .transition()
                     .duration(animationDuration)
                     .attrTween("transform", function(d) {
-                      var i = d3.interpolate(d.yearX - d.x, 0);
-                      var j = d3.interpolate(d.yearY - d.y, 0);
+                      var i = d3.interpolate(0, d.x - d.yearX);
+                      var j = d3.interpolate(0, d.y - d.yearY);
                       return function(t) {
                         return "translate(" + i(t) + "," + j(t) + ")";
                       };
@@ -2575,7 +2610,10 @@
               }
 
               function dateForMode(data) {
-                if (CompetitorMode === 0) {
+                if (
+                  CompetitorMode === 0 ||
+                  data["Competitor Categor  y"] !== "Activity"
+                ) {
                   return data.Founded;
                 } else {
                   return data["Activity/Acquisition Time"];
@@ -2609,15 +2647,14 @@
                       tmp += lines[i][j];
                     }
                   }
-                                    results +=
+                  results +=
                     "<tspan x=" +
                     x +
                     " dy='1.1em' class='funding-hover-info'>" +
                     tmp +
                     "</tspan>";
                 }
-                  return results
-                  
+                return results;
               }
 
               function hoverInfoFunction(segment_data, clicked = "") {
@@ -2632,7 +2669,7 @@
                   }
                 });
 
-                descFormatted = text_wrap(segmentDesc)
+                descFormatted = text_wrap(segmentDesc);
                 hoverSVG
                   .append("rect")
                   .attr("width", 200)
@@ -2657,8 +2694,9 @@
                         segment_data.data.value.key
                       ) {
                         numberOfStartups = count_by_focus_area[i].values.length;
-                        theme = count_by_focus_area[i].values[0]["Themes"]
-                        themeDesc = count_by_focus_area[i].values[0]["Theme Definition"]
+                        theme = count_by_focus_area[i].values[0]["Themes"];
+                        themeDesc =
+                          count_by_focus_area[i].values[0]["Theme Definition"];
                         segmentFunding = d3.sum(
                           count_by_focus_area[i].values,
                           function(d) {
@@ -2672,7 +2710,7 @@
                     } else {
                       var avgFunding = segmentFunding / numberOfStartups;
                     }
-                    themeDesc = text_wrap(themeDesc)
+                    themeDesc = text_wrap(themeDesc);
 
                     line0 =
                       "<tspan x=" +
@@ -2720,7 +2758,8 @@
                       "<tspan x=" +
                       x +
                       " dy='1.7em' class='funding-hover-info'>Theme:</tspan>";
-                    line8 = "<tspan x=" +
+                    line8 =
+                      "<tspan x=" +
                       x +
                       " dy='1.1em' class='funding-hover-info'>" +
                       theme +
@@ -2732,7 +2771,9 @@
                     line10 =
                       "<tspan x=" +
                       x +
-                      " dy='1.7em' class='funding-hover-info'>" + themeDesc + "</tspan>";
+                      " dy='1.7em' class='funding-hover-info'>" +
+                      themeDesc +
+                      "</tspan>";
                     return (
                       line0 +
                       descFormatted +
@@ -2741,7 +2782,7 @@
                       line3 +
                       line4 +
                       line5 +
-                      line6 + 
+                      line6 +
                       line7 +
                       line8 +
                       line9 +
@@ -2900,12 +2941,13 @@
                   })
                   .attr("fill-opacity", 0)
                   .html(function() {
+                    console.log(data);
+                    console.log(dateForMode(data));
                     var x = d3.select(this).attr("x");
                     return hover_info(
                       data["Business Description"],
                       data["Startup"],
                       dateForMode(data),
-                      data["Acquired"],
                       data["Total funding (US$)"],
                       x
                     );
@@ -2976,7 +3018,6 @@
                       data["Business Description"],
                       data["Startup"],
                       dateForMode(data),
-                      data["Acquired By"],
                       data["Total funding (US$)"],
                       x
                     );
@@ -3310,7 +3351,8 @@
                       })
                       .attr("opacity", function(d) {
                         if (
-                          d["Opportunity Space"] === chartPieData[i].data.value.key
+                          d["Opportunity Space"] ===
+                          chartPieData[i].data.value.key
                         ) {
                           return d.opacity;
                         } else {
@@ -3359,7 +3401,8 @@
                       })
                       .attr("opacity", function(d) {
                         if (
-                          d["Opportunity Space"] === chartPieData[i].data.value.key
+                          d["Opportunity Space"] ===
+                          chartPieData[i].data.value.key
                         ) {
                           return d.opacity;
                         } else {
@@ -3536,23 +3579,12 @@
         text_data,
         text_title,
         funding_year,
-        acquried,
         total_funding,
         x,
         limit = 35
       ) {
         fundingFormatted = formatFunding(total_funding);
 
-        if (acquried === "") {
-          acquriedLine = "";
-        } else {
-          acquriedLine =
-            "<tspan x=" +
-            x +
-            " dy='1.1em' class='wrap-year'>Acquired: " +
-            acquried +
-            "</tspan>";
-        }
         words = text_data.split(/\s+/);
         //console.log(words_alt);
         lines = [];
@@ -3573,8 +3605,7 @@
           x +
           " dy='1.1em' class='wrap-year'>Total Funding: $" +
           fundingFormatted +
-          "</tspan>" +
-          acquriedLine;
+          "</tspan>";
         for (i = 0; i < words.length; i++) {
           current_seq_len += words[i].length;
           current_seq.push(words[i].replace(/�۪/g, "'"));
