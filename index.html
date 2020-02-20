@@ -1068,7 +1068,6 @@
           <div class="popup-section-a">
             <div class="column left">
               <div class="svg-container">
-                <img src="assets/dummy-svg.png" height="280px">
               </div>
                 <div class="opportunity-space-title">
                   Opportunity Space
@@ -1508,6 +1507,7 @@
               }
 
               function update_popup(d) {
+
                 d3.select(".popup-container").attr("class", "popup-container added")
                 d3.select(".popup-bg").style("display", "")
                 d3.select(".popup-section-a").style("display", "")
@@ -1516,6 +1516,251 @@
                 
                 var opp_space = d.data.value.key
                 var funding_amount = d.data.value.value
+
+                d3.select(".svg-container").html("")
+
+                chartPieData.forEach(function(v, i) {
+                    if (v.data.value.key === opp_space) {
+                        
+                        var selection =
+                        "#background-segment-" +
+                        v.data.value.key
+                          .replace(/ /g, "-")
+                          .replace(/&/g, "and");
+                          var tmp_width =
+                          d3
+                            .select(selection)
+                            .node()
+                            .getBoundingClientRect().width
+                        var tmp_height =
+                          d3
+                            .select(selection)
+                            .node()
+                            .getBoundingClientRect().height
+        
+                        var tmp_svg = d3
+                          .select(".svg-container")
+                          .append("svg")
+                          .attr("width", tmp_width)
+                          .attr("height", tmp_height);
+
+                          if (i === 0) {
+                            var hor = tmp_width - 260
+                            var ver = tmp_height + 25;
+                          }
+                          if (i === 1) {
+                            var hor = tmp_width - 300;
+                            var ver = tmp_height - 150;
+                          }
+                          if (i === 2) {
+                            var hor = tmp_width - 260;
+                            var ver = tmp_height - 300;
+                          }
+                          if (i === 3) {
+                            var hor = tmp_width - 0;
+                            var ver = tmp_height - 300;
+                          }
+                          if (i === 4) {
+                            var hor = tmp_width + 45;
+                            var ver = tmp_height - 150;
+                          }
+                          if (i === 5) {
+                            var hor = tmp_width - 0;
+                            var ver = tmp_height + 25;
+                          }
+
+                          var tmp_chartSVG = tmp_svg
+                          .append("g")
+                          .attr("transform", "translate(" + hor + "," + ver + ")");
+
+                          if (radial === "maturity") {
+                            
+                            var tmp_existingSegments = tmp_chartSVG
+                              .selectAll("existing-segments")
+                              .data([v])
+                              .enter()
+                              .append("path")
+                              .style("fill-opacity", 1)
+                              .attr("class", function(d) {
+                                //console.log(d)
+                                return (
+                                  "existing-segments segment-" +
+                                  d.data.value.key.replace(/ /g, "-").replace(/&/g, "and")
+                                );
+                              })
+                              .attr("id", function(d) {
+                                return (
+                                  "tmp-existing-segment-" +
+                                  d.data.value.key.replace(/ /g, "-").replace(/&/g, "and")
+                                );
+                              })
+                              .style("stroke", "white")
+                              .style("stroke-width", "2px")
+                              .attr("fill", "#DFDFDF") //F4F4F4
+                              .attr("d", existingArc);
+          
+                            var tmp_emergingSegments = tmp_chartSVG
+                              .selectAll("emerging-segments")
+                              .data([v])
+                              .enter()
+                              .append("path")
+                              .style("fill-opacity", 1)
+                              .attr("class", function(d) {
+                                return (
+                                  "emerging-segments segment-" +
+                                  d.data.value.key.replace(/ /g, "-").replace(/&/g, "and")
+                                );
+                              })
+                              .attr("id", function(d) {
+                                return (
+                                  "tmp-emerging-segment-" +
+                                  d.data.value.key.replace(/ /g, "-").replace(/&/g, "and")
+                                );
+                              })
+                              .style("stroke", "white")
+                              .style("stroke-width", "2px")
+                              .attr("fill", "#E9E9E9")
+                              .attr("d", emergingArc);
+          
+                            var tmp_distantSegments = tmp_chartSVG
+                              .selectAll("distant-segments")
+                              .data([v])
+                              .enter()
+                              .append("path")
+                              .style("fill-opacity", 1)
+                              .attr("class", function(d) {
+                                return (
+                                  "distant-segments segment-" +
+                                  d.data.value.key.replace(/ /g, "-").replace(/&/g, "and")
+                                );
+                              })
+                              .attr("id", function(d) {
+                                return (
+                                  "tmp-distant-segment-" +
+                                  d.data.value.key.replace(/ /g, "-").replace(/&/g, "and")
+                                );
+                              })
+                              .style("stroke", "white")
+                              .style("stroke-width", "2px")
+                              .attr("fill", "#F4F4F4") //DFDFDF
+                              .attr("d", distantArc);
+                          } else {
+                            console.log(v)
+                            count_by_year.forEach(function(w) {
+                                console.log(w)
+                              var tmpArc = d3
+                                .arc()
+                                .innerRadius(w.inner)
+                                .outerRadius(w.outer);
+          
+                              var tmpSegment = tmp_chartSVG
+                                .selectAll("year-segment")
+                                .data([v])
+                                .enter()
+                                .append("path")
+                                .attr("class", "segment")
+                                .attr("d", tmpArc)
+                                .attr("fill", "#f4f4f4");
+                            });
+                          }
+
+                          var tmp_nodes = tmp_chartSVG
+                          .selectAll("nodes")
+                          .data(data)
+                          .enter()
+                          .append("circle")
+                          .attr("class", "nodes")
+                          .attr("r", function(d) {
+                            if (d["Funding Stage"] !== "Acquired") {
+                              return 3.4;
+                            }
+                          })
+                          .attr("opacity", function(d) {
+                            return d.opacity;
+                          })
+                          .attr("fill", function(d) {
+                            return nodeColorScale(
+                              fundingCategoryScale(d["Funding Stage"])
+                            );
+                          })
+                          .attr("cx", function(d) {
+                            if (radial === "maturity") {
+                              return d.x;
+                            } else {
+                              return d.yearX;
+                            }
+                          })
+                          .attr("cy", function(d) {
+                            if (radial === "maturity") {
+                              return d.y;
+                            } else {
+                              return d.yearY;
+                            }
+                          })
+                          .attr("opacity", function(d) {
+                            if (
+                              d["Opportunity Space"] === chartPieData[i].data.value.key
+                            ) {
+                              return d.opacity;
+                            } else {
+                              return 0;
+                            }
+                          });
+
+                          var tmp_acquired = tmp_chartSVG
+                          .selectAll("nodes-acquired")
+                          .data(data)
+                          .enter()
+                          .append("rect")
+                          .attr("class", "nodes nodes-acquired")
+                          .attr("opacity", function(d) {
+                            return d.opacity;
+                          })
+                          .attr("opacity", function(d) {
+                            return d.opacity;
+                          })
+                          .attr("width", function(d) {
+                            if (d["Funding Stage"] === "Acquired") {
+                              return 8.8;
+                            } else {
+                              return 0;
+                            }
+                          })
+                          .attr("height", function(d) {
+                            if (d["Funding Stage"] === "Acquired") {
+                              return 8.8;
+                            } else {
+                              return 0;
+                            }
+                          })
+                          .attr("x", 0)
+                          .attr("y", 0)
+                          .attr("fill", "#FFFD82")
+                          .attr("transform", function(d) {
+                            if (radial === "maturity") {
+                              var x = d.x;
+                              var y = d.y;
+                            } else {
+                              var x = d.yearX;
+                              var y = d.yearY;
+                            }
+                            return "translate(" + x + "," + y + ")    rotate(45)";
+                          })
+                          .attr("opacity", function(d) {
+                            if (
+                              d["Opportunity Space"] === chartPieData[i].data.value.key
+                            ) {
+                              return d.opacity;
+                            } else {
+                              return 0;
+                            }
+                          });
+      
+
+
+
+                    }
+                })
 
                 var popup_data = data.filter(function(d) {
                     return d["Opportunity Space"].toLowerCase() === opp_space;
@@ -4203,54 +4448,54 @@
                     .attr("width", tmp_width)
                     .attr("height", tmp_height);
   
-                  if (i === 0) {
-                    var hor = tmp_width - 200;
-                    var ver = tmp_height - 0;
-                  }
-                  if (i === 1) {
-                    var hor = tmp_width - 300;
-                    var ver = tmp_height - 25;
-                  }
-                  if (i === 2) {
-                    var hor = tmp_width - 350;
-                    var ver = tmp_height - 50;
-                  }
-                  if (i === 3) {
-                    var hor = tmp_width - 350;
-                    var ver = tmp_height - 200;
-                  }
-                  if (i === 4) {
-                    var hor = tmp_width - 300;
-                    var ver = tmp_height - 325;
-                  }
-                  if (i === 5) {
-                    var hor = tmp_width - 200;
-                    var ver = tmp_height - 375;
-                  }
-                  if (i === 6) {
-                    var hor = tmp_width - 75;
-                    var ver = tmp_height - 375;
-                  }
-                  if (i === 7) {
-                    var hor = tmp_width - 25;
-                    var ver = tmp_height - 325;
-                  }
-                  if (i === 8) {
-                    var hor = tmp_width - 0;
-                    var ver = tmp_height - 200;
-                  }
-                  if (i === 9) {
-                    var hor = tmp_width - 25;
-                    var ver = tmp_height - 75;
-                  }
-                  if (i === 10) {
-                    var hor = tmp_width - 25;
-                    var ver = tmp_height - 25;
-                  }
-                  if (i === 11) {
-                    var hor = tmp_width - 25;
-                    var ver = tmp_height - 25;
-                  }
+                    if (i === 0) {
+                        var hor = tmp_width - 200;
+                        var ver = tmp_height - 0;
+                      }
+                      if (i === 1) {
+                        var hor = tmp_width - 300;
+                        var ver = tmp_height - 25;
+                      }
+                      if (i === 2) {
+                        var hor = tmp_width - 350;
+                        var ver = tmp_height - 50;
+                      }
+                      if (i === 3) {
+                        var hor = tmp_width - 350;
+                        var ver = tmp_height - 200;
+                      }
+                      if (i === 4) {
+                        var hor = tmp_width - 300;
+                        var ver = tmp_height - 325;
+                      }
+                      if (i === 5) {
+                        var hor = tmp_width - 200;
+                        var ver = tmp_height - 375;
+                      }
+                      if (i === 6) {
+                        var hor = tmp_width - 75;
+                        var ver = tmp_height - 375;
+                      }
+                      if (i === 7) {
+                        var hor = tmp_width - 25;
+                        var ver = tmp_height - 325;
+                      }
+                      if (i === 8) {
+                        var hor = tmp_width - 0;
+                        var ver = tmp_height - 200;
+                      }
+                      if (i === 9) {
+                        var hor = tmp_width - 25;
+                        var ver = tmp_height - 75;
+                      }
+                      if (i === 10) {
+                        var hor = tmp_width - 25;
+                        var ver = tmp_height - 25;
+                      }
+                      if (i === 11) {
+                        var hor = tmp_width - 25;
+                        var ver = tmp_height - 25;
+                      }
   
                   var tmp_chartSVG = tmp_svg
                     .append("g")
