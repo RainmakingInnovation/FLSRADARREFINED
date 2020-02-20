@@ -3750,20 +3750,46 @@
                 .attr("width", bar_width)
                 .attr("height", bar_height)
                 .append("g")
+                .attr("transform", "translate(" + (margin.left-50) + "," + margin.top + ")");
 
                 if (type === "Amount of Funding") {
 
-                    var maxVal = d3.max(bar_data, function(d) {
-                        if (d.Funding === "n/a") {
-                            return 0
-                        }
-                        return +d.Funding
+                    var fundHist = [{'name': '0-10K', 'lower_limit': 0, 'upper_limit': 10000, 'startups': 0},
+                    {'name': '10K-100K', 'lower_limit': 10000, 'upper_limit': 100000, 'startups': 0},
+                    {'name': '100K-1M', 'lower_limit': 100000, 'upper_limit': 1000000, 'startups': 0},
+                    {'name': '1M-10M', 'lower_limit': 1000000, 'upper_limit': 10000000, 'startups': 0},
+                    {'name': '10M-100M', 'lower_limit': 10000000, 'upper_limit': 100000000, 'startups': 0},
+                    {'name': '100M+', 'lower_limit': 100000000, 'upper_limit': 100000000000, 'startups': 0},
+                    ]
+
+                    bar_data.forEach(function(v) {
+                        fundHist.forEach(function(w) {
+                            if (v.Funding === "n/a") {
+                                v.Funding = 0
+                            }
+                            if (v.Funding > w.lower_limit && v.Funding <= w.upper_limit) {
+                                w.startups += 1
+                            }
+                        })
                     })
 
-                    console.log(maxVal)
+                    var maxVal = d3.max(fundHist, function(d) {
+                        return d.startups
+                    })
+
+                    var x = d3.scaleBand()
+                    .domain(fundHist.map(function(d) {
+                        return d.name
+                    }))
+                    .range([50, bar_width-50]);
+
+                var y = d3.scaleLinear()
+                    .range([bar_height-50, 50])
+                    .domain([0, maxVal]);
+
                     var barX = d3.scaleBand()
-                    .domain(bar_data.map(function(d) {
-                        return d["Startup"]
+                    .domain(fundHist.map(function(d) {
+                        return d.name
                     }))
                     .range([60, bar_width-120])
                     .padding(0.1);
@@ -3773,16 +3799,16 @@
                     .domain([0, maxVal])
 
                     barSVG.selectAll(".bar")
-                    .data(bar_data)
+                    .data(fundHist)
                     .enter().append("rect")
                     .attr("class", "bar")
                     .attr("fill", "#f1f1f1")
                     .attr("stroke", "#36363c")
                     .attr("stroke-width", "2px")
-                    .attr("x", function(d) { return barX(d["Startup"]); })
-                    .attr("width", barX.bandwidth())
-                    .attr("y", function(d) { return barY(+d.Funding); })
-                    .attr("height", function(d) { return bar_height -50 - barY(+d.Funding); });
+                    .attr("x", function(d) { return x(d.name); })
+                    .attr("width", x.bandwidth())
+                    .attr("y", function(d) { return y(+d.startups); })
+                    .attr("height", function(d) { return bar_height -50 - y(+d.startups); });
 
                       // add the x Axis
                     /* barSVG.append("g")
@@ -3791,19 +3817,77 @@
 
                     // add the y Axis
                     barSVG.append("g")
-                    .attr("transform", "translate(" + 60 + ",0)")
-                        .call(d3.axisLeft(barY));
+                    .attr("transform", "translate(0," + (bar_height-50) + ")")
+                    .call(d3.axisBottom(x).ticks(fundHist.length));
+
+                    barSVG.append("g")
+                        .attr("transform", "translate(50,0)")
+                        .call(d3.axisLeft(y).ticks(maxVal));
 
                 } else {
+                    var parseDate = d3.timeParse("%Y");
                     var maxVal = d3.max(bar_data, function(d) {
-                        return +d.Year
+                        return parseDate(d.Year)
                     })
 
                     var minVal = d3.min(bar_data, function(d) {
-                        return +d.Year
+                        return parseDate(d.Year)
                     })
 
-                    var barX = d3.scaleBand()
+                    
+
+                    var x = d3.scaleTime()
+                        .domain([minVal, maxVal])
+                        .rangeRound([50, bar_width-50]);
+
+                    var y = d3.scaleLinear()
+                        .range([bar_height-50, 50]);
+
+                    var histogram = d3.histogram()
+                        .value(function(d) { 
+                            return parseDate(d.Year)})
+                        .domain(x.domain())
+                        .thresholds(x.ticks(d3.timeYear));
+
+                        var bins = histogram(bar_data);
+
+                        console.log(bins)
+
+                        var maxLength = d3.max(bins, function(v) {
+                            return v.length
+                        })
+
+                        if (bins.length > 20) {
+                            xTicks = bins.length/2
+                        } else {
+                            xTicks = bins.length
+                        }
+                        
+
+                        y.domain([0, d3.max(bins, function(d) { return d.length; })]);
+
+                        barSVG.selectAll("rect")
+                        .data(bins)
+                      .enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("x", 1)
+                        .attr("transform", function(d) {
+                            return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+                        .attr("width", function(d) { return x(d.x1) - x(d.x0)  ; })
+                        .attr("height", function(d) { return bar_height-50 - y(d.length); })
+                        .attr("fill", "#f1f1f1")
+                        .attr("stroke", "#36363c")
+                        .attr("stroke-width", "2px")
+
+                        barSVG.append("g")
+                        .attr("transform", "translate(0," + (bar_height-50) + ")")
+                        .call(d3.axisBottom(x).ticks(xTicks));
+
+                        barSVG.append("g")
+                        .attr("transform", "translate(50,0)")
+                        .call(d3.axisLeft(y).ticks(maxLength));
+
+                    /* var barX = d3.scaleBand()
                     .domain(bar_data.map(function(d) {
                         return d["Startup"]
                     }))
@@ -3830,11 +3914,11 @@
                     /* barSVG.append("g")
                         .attr("transform", "translate(0," + (bar_height - 50) + ")")
                         .call(d3.axisBottom(barX)); */
-
+                    /* 
                     // add the y Axis
                     barSVG.append("g")
                     .attr("transform", "translate(" + 60 + ",0)")
-                        .call(d3.axisLeft(barY));
+                        .call(d3.axisLeft(barY)); */
 
                 }
 
@@ -4815,6 +4899,7 @@
             d3.select(".popup-close").on("click",  function() {
                 d3.select(".popup-container").attr("class", "popup-container")
                 d3.select(".popup-bg").style("display", "none")
+                d3.select(".svg-bar-container").html("")
             })
   
             d3.select("#map-toggle-btn").on("click", function() {
