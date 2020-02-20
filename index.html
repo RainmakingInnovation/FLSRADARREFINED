@@ -657,6 +657,12 @@
     justify-content: center;
       }
 
+      .compass-title {
+        font-size: 12px;
+        width: 96px;
+        text-align: center;
+      }
+
       .left-sidebar-header img {
         width: 80px;
         height: 80px;
@@ -875,11 +881,11 @@
     font-size: 30px;
     color: #36363c;
     font-family: "Graphik Bold";
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   .hero-startup {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: #36363c;
   }
 
@@ -900,10 +906,23 @@
     line-height: 1.6em;
   }
 
+  .fl {
+      float: left;
+  }
+
+  .hero-startup-logo-container {
+    display:table-cell;
+    padding: 5px;
+    width:140px;
+    height:140px;
+    text-align: center; 
+    vertical-align: middle;
+  }
+
   .hero-startup-logo {
+      margin: auto;
     width: 140px;
-    float:  left;
-    margin-right: 15px;
+
   }
 
   .hero-startup-desc {
@@ -922,7 +941,7 @@
     font-size: 12px;
     padding: 5px;
     height: 140px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   .hero-startup-desc-overview {
@@ -1106,9 +1125,11 @@
               <div class="right-title">Hero Startups:</div>
               <div id="hs-0" class="hero-startup">
                 <div class="hero-startup-container">
+                    <div class="fl">
                   <div class="hero-startup-logo-container">
                     <img id="hs-logo-0" class="hero-startup-logo" src="">
                   </div>
+                </div>
                   <div class="hero-startup-desc">
                     <div id="hs-ov-0" class="hero-startup-desc-overview"></div>
                     <div id="hs-prb-0" class="hero-startup-desc-problem"></div>
@@ -1125,9 +1146,11 @@
               </div>
               <div id="hs-1" class="hero-startup">
                 <div class="hero-startup-container">
+                    <div class="fl">
                   <div class="hero-startup-logo-container">
                     <img id="hs-logo-1" class="hero-startup-logo" src="">
                   </div>
+                </div>
                   <div class="hero-startup-desc">
                     <div id="hs-ov-1" class="hero-startup-desc-overview"></div>
                     <div id="hs-prb-1" class="hero-startup-desc-problem"></div>
@@ -1144,9 +1167,11 @@
               </div>
               <div id="hs-2" class="hero-startup">
                 <div class="hero-startup-container">
+                    <div class="fl">
                   <div class="hero-startup-logo-container">
                     <img id="hs-logo-2" class="hero-startup-logo" src="">
                   </div>
+                </div>
                   <div class="hero-startup-desc">
                     <div id="hs-ov-2" class="hero-startup-desc-overview"></div>
                     <div id="hs-prb-2" class="hero-startup-desc-problem"></div>
@@ -1185,15 +1210,16 @@
       <div class="left-sidebar-header">
         <img src="assets/logo.png">
       </div>
+      <div class="compass-title">FLSRadarV3</div>
       <div class="left-sidebar-buttons">
         <div id="radar-toggle-btn" class="left-sidebar-btn">
         <div class="left-sidebar-btn-label">Radar</div>
-        <i class="fas fa-bullseye"></i>
+        <i class="fas fa-bullseye fa-lg"></i>
         
         </div>
         <div id="map-toggle-btn" class="left-sidebar-btn">
         <div class="left-sidebar-btn-label">Map</div>
-        <i class="far fa-map"></i>
+        <i class="far fa-map fa-lg"></i>
         
         </div>
       </div>
@@ -1406,6 +1432,29 @@
                 d3.select("#radar-toggle-btn").attr("class", "left-sidebar-btn active")
                 toggle_map("off");
               });
+
+              function modeArray(array) {
+                if (array.length == 0) return null;
+                var modeMap = {},
+                  maxCount = 1,
+                  modes = [];
+              
+                for (var i = 0; i < array.length; i++) {
+                  var el = array[i];
+              
+                  if (modeMap[el] == null) modeMap[el] = 1;
+                  else modeMap[el]++;
+              
+                  if (modeMap[el] > maxCount) {
+                    modes = [el];
+                    maxCount = modeMap[el];
+                  } else if (modeMap[el] == maxCount) {
+                    modes.push(el);
+                    maxCount = modeMap[el];
+                  }
+                }
+                return modes;
+              }
   
               function country_hover(d, i) {
                 d3.selectAll(".country-circle")
@@ -1463,6 +1512,7 @@
                 d3.select(".popup-bg").style("display", "")
                 d3.select(".popup-section-a").style("display", "")
                 d3.select(".popup-section-b").style("display", "none")
+                d3.select(".analysis-btn").style("display", "")
                 
                 var opp_space = d.data.value.key
                 var funding_amount = d.data.value.value
@@ -1473,12 +1523,27 @@
 
                   var numStartups = popup_data.length
 
+                  var avgFunding = funding_amount/numStartups
+
+                  yearTotal = 0
+                  maturityList = []
+                  popup_data.forEach(function(v) {
+                    yearTotal += +v.Founded
+                    maturityList.push(v.Maturity)
+                  })
+
+                  var avgYear = Math.round(yearTotal/numStartups)
+                  var maturityMode = modeArray(maturityList)
+
+                  console.log(yearTotal, avgYear)
+
                   d3.select("#theme-tag").html(popup_data[0]["Themes"])
                   d3.select("#focus-area-tag").html(popup_data[0]["Opportunity Space"])
                   d3.select(".opportunity-space-title").html(popup_data[0]["Opportunity Space"])
                   d3.select(".opportunity-space-description").html(popup_data[0]["Opportunity Space Description"])
                   d3.select("#total-no-startups").html(numStartups)
-                  d3.select("#total-avg-funding").html("$" + formatFunding(funding_amount))
+                  d3.select("#total-avg-funding").html("$" + formatFunding(funding_amount) + ", $" + formatFunding(avgFunding))
+                  d3.select("#avg-funding-year").html(avgYear + ", " + maturityMode[0] )
                   
                   heroPopupData = []
                   hero_data.forEach(function(v) {
@@ -1503,7 +1568,7 @@
                                     hs_sln += v["Solution "]
 
                                     var hs_website = "<span style='font-family: Graphik Bold'>Website:<\/span> "
-                                        hs_website += v["Website"]
+                                        hs_website += "<a href='" + v["Website"] + "' target='_blank'>" + v["Website"] + "<\/a>"
 
                                     var hs_location = "<span style='font-family: Graphik Bold'>Location:<\/span> "
                                         hs_location += v["Location"]
@@ -1514,7 +1579,8 @@
                                         var hs_amount = "<span style='font-family: Graphik Bold'>Funding Amount:<\/span> "
                                             hs_amount += v["Funding Amount"]
         
-                                            var hs_year = "<span style='font-family: Graphik Bold'>Year:<\/span> n/a"
+                                            var hs_year = "<span style='font-family: Graphik Bold'>Year:<\/span> "
+                                                hs_year += v["Year Founded"]
                             
 
                         d3.select("#hs-logo-" + i).attr("src", logo_url)
@@ -1532,6 +1598,20 @@
                       }
                   })
                   console.log(heroPopupData)
+
+                  d3.select(".analysis-btn").on("click", function() {
+                    d3.select(".popup-container").attr("class", "popup-container added")
+                    d3.select(".popup-bg").style("display", "")
+                    d3.select(".popup-section-a").style("display", "none")
+                    d3.select(".popup-section-b").style("display", "")
+                    d3.select(".analysis-btn").style("display", "none")
+                    bar_data = popup_data
+                    bar_data.forEach(function(v) {
+                        v.Funding = v["Total funding (US$)"]
+                        v.Year = v["Founded"]
+                    })
+
+                  })
               }
 
               function country_click(d) {
@@ -1539,6 +1619,7 @@
                 d3.select(".popup-bg").style("display", "")
                 d3.select(".popup-section-a").style("display", "none")
                 d3.select(".popup-section-b").style("display", "")
+                d3.select(".analysis-btn").style("display", "none")
 
                 bar_data = [];
                 data.forEach(function(w) {
