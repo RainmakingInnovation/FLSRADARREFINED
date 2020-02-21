@@ -1049,6 +1049,13 @@
     height: 460px;
   }
 
+  .bar-axis-label {
+    text-anchor: middle;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Graphik Regular";
+  }
+
 
     </style>
 
@@ -1292,7 +1299,8 @@
         leftWidth = 1100,
           leftHeight = 700,
           bar_width = 900,
-          bar_height = 460;
+          bar_height = 460,
+          popupMode = {"page": "none", "type": "none"};
 
           d3.select("#radar-toggle-btn").attr("class", "left-sidebar-btn active")
           d3.select(".popup-bg").style("display", "none")
@@ -1507,7 +1515,8 @@
               }
 
               function update_popup(d) {
-
+                popupMode.page = "section-a"
+                popupMode.type = "radar"
                 d3.select(".popup-container").attr("class", "popup-container added")
                 d3.select(".popup-bg").style("display", "")
                 d3.select(".popup-section-a").style("display", "")
@@ -1845,16 +1854,33 @@
                   console.log(heroPopupData)
 
                   d3.select(".analysis-btn").on("click", function() {
+                    console.log(popupMode)
                     d3.select(".popup-container").attr("class", "popup-container added")
                     d3.select(".popup-bg").style("display", "")
-                    d3.select(".popup-section-a").style("display", "none")
-                    d3.select(".popup-section-b").style("display", "")
-                    d3.select(".analysis-btn").style("display", "none")
-                    bar_data = popup_data
-                    bar_data.forEach(function(v) {
-                        v.Funding = v["Total funding (US$)"]
-                        v.Year = v["Founded"]
-                    })
+                    if (popupMode.page === "section-a") {
+                      console.log('test')
+                      popupMode.page = "section-b"
+                      d3.select(".popup-section-a").style("display", "none")
+                      d3.select(".popup-section-b").style("display", "")
+                      d3.select(".analysis-btn").style("display", "")
+                      bar_data = popup_data
+                      bar_data.forEach(function(v) {
+                          v.Funding = v["Total funding (US$)"]
+                          v.Year = v["Founded"]
+                      })
+                      update_bar("Amount of Funding")
+                    } else {
+                      if (popupMode.page === "section-b" && popupMode.type === "radar") {
+                        popupMode.page = "section-a"
+                        d3.select(".popup-section-a").style("display", "")
+                        d3.select(".popup-section-b").style("display", "none")
+                        d3.select(".analysis-btn").style("display", "")
+                    
+  
+                      }
+                    }
+
+
 
                   })
               }
@@ -1878,6 +1904,7 @@
                           bar_data.push(obj);
                     }
                 })
+                update_bar("Amount of Funding")
 
               }
 
@@ -3744,6 +3771,8 @@
             function update_bar(type) {
                 var margin = {top: 20, right: 20, bottom: 30, left: 40}
                 d3.select(".svg-bar-container").html("")
+                d3.select(".dropbtn-b").html("<i class='arrow down'> <\/i> " + type)
+
 
                 var barSVG = d3.select(".svg-bar-container")
                 .append("svg")
@@ -3824,6 +3853,21 @@
                         .attr("transform", "translate(50,0)")
                         .call(d3.axisLeft(y).ticks(maxVal));
 
+                    barSVG.append("text")             
+                      .attr("transform",
+                        "translate(" + (bar_width/2) + " ," + 
+                           (bar_height-50 + 26) + ")")
+                    .attr("class", "bar-axis-label")
+                    .text("Funding");
+
+                    barSVG.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 12)
+                    .attr("x",0 - ((bar_height-10) / 2))
+                    .attr("dy", "1em")
+                    .attr("class", "bar-axis-label")
+                    .text("Number of Startups");   
+
                 } else {
                     var parseDate = d3.timeParse("%Y");
                     var maxVal = d3.max(bar_data, function(d) {
@@ -3886,6 +3930,21 @@
                         barSVG.append("g")
                         .attr("transform", "translate(50,0)")
                         .call(d3.axisLeft(y).ticks(maxLength));
+
+                        barSVG.append("text")             
+                        .attr("transform",
+                          "translate(" + (bar_width/2) + " ," + 
+                             (bar_height-50 + 26) + ")")
+                      .attr("class", "bar-axis-label")
+                      .text("Year");
+  
+                      barSVG.append("text")
+                      .attr("transform", "rotate(-90)")
+                      .attr("y", 12)
+                      .attr("x",0 - ((bar_height-10) / 2))
+                      .attr("dy", "1em")
+                      .attr("class", "bar-axis-label")
+                      .text("Number of Startups");  
 
                     /* var barX = d3.scaleBand()
                     .domain(bar_data.map(function(d) {
