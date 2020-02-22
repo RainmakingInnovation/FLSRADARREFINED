@@ -14,41 +14,41 @@
     <style type="text/css">
       body {
         display: grid;
-        grid-template-columns: 100px 140px 800px 240px;
-        grid-template-rows: 445px 355px;
+        grid-template-columns: 146px 800px 240px;
+        grid-template-rows: 300px 120px 400px;
         grid-gap: 0.1em;
         margin: auto;
       }
 
       #chart-container {
-        grid-column: 3 / span 1;
+        grid-column: 2 / span 1;
         grid-row: 1 / span 2;
         padding: 5px;
       }
 
       #key-container {
-        grid-column: 2 / span 1;
-        grid-row: 1 / span 1;
+        grid-column: 3 / span 1;
+        grid-row: 2 / span 1;
         overflow: hidden;
-        padding: 30px;
       }
 
       #control-container {
-        grid-column: 2 / span 1;
-        grid-row: 2 / span 1;
+        grid-column: 3 / span 1;
+        grid-row: 3 / span 1;
         overflow: hidden;
         padding: 10px 20px;
+        text-align: center;
       }
 
       #hover-info-container {
-        grid-column: 4 / span 1;
-        grid-row: 1 / span 2;
+        grid-column: 3 / span 1;
+        grid-row: 1 / span 1;
         overflow: hidden;
         padding: 5px;
       }
 
       #save-button-container {
-        margin-top: 40px;
+        margin-top: 0px;
         text-align: center;
       }
 
@@ -214,7 +214,7 @@
       }
 
       #switch-button:hover {
-        background-color: #e74668;
+        background-color: #132A54;
       }
 
       #switch-button-label {
@@ -227,7 +227,7 @@
 
       /* Dropdown Button */
       .dropbtn {
-        background-color: #b7b7b7;
+        background-color: #787878;
         color: white;
         padding: 10px;
         font-family: "Graphik Regular";
@@ -241,6 +241,7 @@
 
       /* The container <div> - needed to position the dropdown content */
       .dropdown-industry {
+        margin: auto;
         position: relative;
         display: inline-block;
         text-anchor: middle;
@@ -287,7 +288,7 @@
 
       /* Change the background color of the dropdown button when the dropdown content is shown */
       .dropdown-industry:hover .dropbtn {
-        background-color: #e74668;
+        background-color: #132A54;
       }
 
       .switch-button {
@@ -313,12 +314,12 @@
 
       #map-button,
       #save-button {
-        background-color: #b7b7b7;
+        background-color: #787878;
       }
 
       #map-button:hover,
       #save-button:hover {
-        background-color: #e74668;
+        background-color: #132A54;
       }
 
       .switch {
@@ -554,11 +555,11 @@
       }
 
       .sidebar {
-        position: absolute;
+        position: fixed;
         width: 380px;
-        height: 100%;
-        background-color: #fcfcfc;
-        border-left: 2px solid #949494;
+        height: 100vh;
+        background-color: #000000;
+        border-left: 2px solid #454545;
         right: 0px;
         top: 0px;
       }
@@ -569,14 +570,14 @@
       }
 
       #chart-button {
-        background-color: #b7b7b7;
+        background-color: #787878;
         position: absolute;
         left: 150px;
         top: 700px;
       }
 
       #chart-button:hover {
-        background-color: #e74668;
+        background-color: #132A54;
       }
 
       .map-tooltip {
@@ -601,6 +602,7 @@
         padding-top: 60px;
         padding-bottom: 20px;
         text-transform: uppercase;
+        color: #787878;
       }
 
       #startup-list {
@@ -615,7 +617,7 @@
         overflow: scroll;
         font-family: "Graphik Regular";
         background-color: white;
-        border: 1px solid #949494;
+        border: 1px solid #787878;
         padding: 10px;
       }
 
@@ -637,14 +639,17 @@
           justify-content: center;
               overflow: hidden;
           position: fixed;
-            width: 96px;
+            width: 146px;
             height: 100vh;
             left: 0px;
             top: 0px;
-            background-color: #FCFCFC;
-            border-right: 2px solid #949494;
+            background-color: #000000;
+            border-right: 2px solid #454545;
             font-family: "Graphik Bold";  
             vertical-align: middle;
+            text-align: center;
+            text-anchor: middle;
+            
 
       }
 
@@ -661,11 +666,13 @@
         font-size: 12px;
         width: 96px;
         text-align: center;
+        color: #787878;
+        margin: auto;
       }
 
       .left-sidebar-header img {
-        width: 80px;
-        height: 80px;
+        width: 40px;
+        height: 40px;
         object-fit: contain;
       }
 
@@ -683,10 +690,12 @@
         align-items: center;
         justify-content: center;
         flex-direction: column-reverse;
+        color: #787878;
+        margin: auto;
       }
 
-      .left-sidebar-btn:hover {
-        background-color: #E6E6E6;
+      .left-sidebar-btn > i {
+        border: 0px;
       }
 
       .left-sidebar-btn-label {
@@ -695,7 +704,7 @@
       }
 
       .left-sidebar-btn.active {
-        color: #FF416C;
+        color: #DDDDDD;
     }
 
     .popup-bg {
@@ -805,7 +814,6 @@
   .left {
     width: 35%;
     margin-left: 35px;
-    text-align: center;
   }
 
   .right {
@@ -823,7 +831,7 @@
     width: 300px;
     height: 300px;
     margin: auto;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
   }
 
   .opportunity-space-title {
@@ -843,6 +851,7 @@
     margin: 10px;
     font-family: "Graphik Regular";
     margin-bottom: 15px;
+    margin-right: 15px;
     
   }
 
@@ -859,11 +868,16 @@
 
   .column-icon {
     display: inline;
+    margin: auto;
+    min-width: 26px;
   }
 
   .column-icon > i {
     border: 0px;
-    color: #36363c
+    color: #36363c;
+    width: 26px;
+    margin: auto;
+    text-align: center;
   }
 
   .column-desc {
@@ -983,7 +997,7 @@
   }
 
   .dropbtn-b {
-    background-color: #b7b7b7;
+    background-color: #787878;
     color: white;
     padding: 10px;
     font-family: "Graphik Regular";
@@ -1040,7 +1054,7 @@
 
   /* Change the background color of the dropdown button when the dropdown content is shown */
   .dropdown-bar-chart:hover .dropbtn-b {
-    background-color: #e74668;
+    background-color: #132A54;
   }
 
   .svg-bar-container {
@@ -1054,6 +1068,17 @@
     text-align: center;
     font-size: 12px;
     font-family: "Graphik Regular";
+  }
+
+  .map-container {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 2;
+  }
+
+  .tick > line {
+    stroke: lightgrey;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges;
   }
 
 
@@ -1214,7 +1239,7 @@
       </div>
     <div class="left-sidebar">
       <div class="left-sidebar-header">
-        <img src="assets/logo.png">
+        <img src="assets/logo-.png">
       </div>
       <div class="compass-title">FLSRadarV3</div>
       <div class="left-sidebar-buttons">
@@ -1230,18 +1255,17 @@
         </div>
       </div>
     </div>
+
     <div id="hover-info-container"></div>
     <div class="map-container">
+      <div class="sidebar">
+        <div class="sidebar-title"></div>
+        <div id="startup-list"></div>
+      </div>
   <div class="map-tooltip"></div>
   <div class="bg"></div>
   <div id="map"></div>
 
-  <div class="sidebar">
-    <div class="sidebar-title"></div>
-    <div id="startup-list"></div>
-    
-     <button class="switch-button" id="chart-button">View Chart</button>
-  </div>
 </div>
     <div id="chart-container"></div>
     <div id="key-container"></div>
@@ -1286,8 +1310,8 @@
           keySpacing = 10,
           radial = "year",
           animationDuration = 2000,
-          keyWidth = 140,
-          keyHeight = 425,
+          keyWidth = 240,
+          keyHeight = 260,
           filter = 0,
           filterKey = "",
           industryFilter = "All Startups",
@@ -1297,7 +1321,7 @@
           hoverOn = 0;
         hoverSegment = "",
         leftWidth = 1100,
-          leftHeight = 700,
+          leftHeight = 650,
           bar_width = 900,
           bar_height = 460,
           popupMode = {"page": "none", "type": "none"};
@@ -1357,10 +1381,10 @@
         var hoverSVG = d3
           .select("#hover-info-container")
           .append("svg")
-          .attr("width", 200)
-          .attr("height", height)
+          .attr("width", 240)
+          .attr("height", 300)
           .append("g")
-          .attr("transform", "translate(" + 200 / 2 + "," + height / 2 + ")");
+          .attr("transform", "translate(" + 240 / 2 + "," + 300 / 2 + ")");
   
         var chartTitle = chartSVG
           .append("text")
@@ -1371,8 +1395,8 @@
         var leftProjection = d3
           .geoMercator()
           .translate([leftWidth / 2, leftHeight / 2])
-          .center([0.2, 30.7])
-          .scale([180]);
+          .center([30, 40.7])
+          .scale([150]);
   
         var leftSVG = d3
           .select("#map")
@@ -1437,6 +1461,7 @@
               d3.select("#radar-toggle-btn").on("click", function() {
                 d3.select("#map-toggle-btn").attr("class", "left-sidebar-btn")
                 d3.select("#radar-toggle-btn").attr("class", "left-sidebar-btn active")
+                d3.select("body").style("background-color", "white")
                 toggle_map("off");
               });
 
@@ -1653,10 +1678,8 @@
                               .style("stroke-width", "2px")
                               .attr("fill", "#F4F4F4") //DFDFDF
                               .attr("d", distantArc);
-                          } else {
-                            console.log(v)
+                          } else {  
                             count_by_year.forEach(function(w) {
-                                console.log(w)
                               var tmpArc = d3
                                 .arc()
                                 .innerRadius(w.inner)
@@ -1783,13 +1806,13 @@
                   maturityList = []
                   popup_data.forEach(function(v) {
                     yearTotal += +v.Founded
-                    maturityList.push(v.Maturity)
+                    if (v.Maturity !== "") {
+                      maturityList.push(v.Maturity)
+                    }
                   })
 
                   var avgYear = Math.round(yearTotal/numStartups)
                   var maturityMode = modeArray(maturityList)
-
-                  console.log(yearTotal, avgYear)
 
                   d3.select("#theme-tag").html(popup_data[0]["Themes"])
                   d3.select("#focus-area-tag").html(popup_data[0]["Opportunity Space"])
@@ -1851,14 +1874,11 @@
                           d3.select("#hs-" + i).style("display", "none")
                       }
                   })
-                  console.log(heroPopupData)
 
                   d3.select(".analysis-btn").on("click", function() {
-                    console.log(popupMode)
                     d3.select(".popup-container").attr("class", "popup-container added")
                     d3.select(".popup-bg").style("display", "")
                     if (popupMode.page === "section-a") {
-                      console.log('test')
                       popupMode.page = "section-b"
                       d3.select(".popup-section-a").style("display", "none")
                       d3.select(".popup-section-b").style("display", "")
@@ -2400,12 +2420,13 @@
               .enter()
               .append("path")
               .attr("d", themeArc)
-              .attr("fill", function(d) {
+              .attr("fill", "#132A54")
+              /*.attr("fill", function(d) {
                 return focusAreaeBandColorScale(
                   d.data.value.values[0]["Opportunity Space"]
                 );
               })
-              .style("opacity", "0.7")
+              .style("opacity", "0.7")*/
               .style("stroke", "white")
               .style("stroke-width", "2px");
   
@@ -2502,9 +2523,10 @@
                   d.data.value.key.toLowerCase().replace(/ /g, "-") + "-band"
                 );
               })
-              .attr("fill", function(d) {
+              .attr("fill", "#82ADBD")
+              /* .attr("fill", function(d) {
                 return focusAreaeBandColorScale(d.data.value.key);
-              })
+              })*/
               .on("mouseover", function(d) {
                 labelMouseOver(d);
                 hoverInfoFunction(d);
@@ -2686,13 +2708,13 @@
                 var h = keySize + keySpacing;
                 var offset = 0;
                 var horz = -50;
-                var vert = i * h - offset + 120;
+                var vert = i * h - offset - 90;
                 return "translate(" + horz + "," + vert + ")";
               });
   
             var keyAcquired = keySVG
               .append("g")
-              .attr("transform", "translate(-45,180)");
+              .attr("transform", "translate(-45,-30)");
   
             keyAcquired
               .append("rect")
@@ -2782,7 +2804,7 @@
   
             keyActivity = keySVG
               .append("g")
-              .attr("transform", "translate(-50,140)")
+              .attr("transform", "translate(-50,-90)")
               .style("display", "none");
   
             keyActivity
@@ -2888,10 +2910,8 @@
               .append("text")
               .attr("class", "key-title")
               .text("Funding Key:")
-              .attr("y", function() {
-                return keyOther.node().transform.animVal.getItem(0).matrix.f - 16;
-              })
-              .attr("x", -58);
+              .attr("y", -110)
+              .attr("x", -60);
   
             /* var switchBtn = svg
                 .append("rect")
@@ -3526,12 +3546,12 @@
                 keyOther.style("display", "none");
                 keyInvestment.style("display", "");
                 keyActivity.style("display", "");
-                keyAcquired.attr("transform", "translate(-45,161)");
+                keyAcquired.attr("transform", "translate(-45,-70)");
               } else {
                 keyActivity.style("display", "none");
                 keyInvestment.style("display", "none");
                 keyOther.style("display", "");
-                keyAcquired.attr("transform", "translate(-45,180)");
+                keyAcquired.attr("transform", "translate(-45,-30)");
               }
   
               nodes
@@ -3806,15 +3826,23 @@
                         return d.startups
                     })
 
+                    
+
                     var x = d3.scaleBand()
                     .domain(fundHist.map(function(d) {
                         return d.name
                     }))
-                    .range([50, bar_width-50]);
+                    .range([50, bar_width-50])
+                    .paddingInner(0.25);
 
                 var y = d3.scaleLinear()
                     .range([bar_height-50, 50])
                     .domain([0, maxVal]);
+
+                    var colorScale = d3.scaleOrdinal().domain(x.domain())
+                      .range(["#5FBDFB", "#EA3B66", "#F5D932",
+                      "#083D77", "#EA2B1F", "#995D81", "#1D8A99", "#F3A712", "#136F63",
+                      "#9368B7", "#9BC53D", "#122C34"])
 
                     var barX = d3.scaleBand()
                     .domain(fundHist.map(function(d) {
@@ -3827,17 +3855,26 @@
                     .range([bar_height-50, 100])
                     .domain([0, maxVal])
 
-                    barSVG.selectAll(".bar")
+                    barSVG.append("g")
+                    .attr("transform", "translate(50,0)")
+                    .call(d3.axisLeft(y).ticks(maxVal).tickSize(-bar_width+100));
+
+                    var bars = barSVG.selectAll(".bar")
                     .data(fundHist)
                     .enter().append("rect")
                     .attr("class", "bar")
-                    .attr("fill", "#f1f1f1")
-                    .attr("stroke", "#36363c")
-                    .attr("stroke-width", "2px")
+                    .attr("fill", function(d) {
+                      return colorScale(d.name)
+                    })
                     .attr("x", function(d) { return x(d.name); })
                     .attr("width", x.bandwidth())
+                    .attr("y", bar_height - 50)
+                    .attr("height", 0)
+
+                    bars.transition()
+                    .duration(1500)
+                    .attr("height", function(d) { return bar_height -50 - y(+d.startups); })
                     .attr("y", function(d) { return y(+d.startups); })
-                    .attr("height", function(d) { return bar_height -50 - y(+d.startups); });
 
                       // add the x Axis
                     /* barSVG.append("g")
@@ -3848,10 +3885,6 @@
                     barSVG.append("g")
                     .attr("transform", "translate(0," + (bar_height-50) + ")")
                     .call(d3.axisBottom(x).ticks(fundHist.length));
-
-                    barSVG.append("g")
-                        .attr("transform", "translate(50,0)")
-                        .call(d3.axisLeft(y).ticks(maxVal));
 
                     barSVG.append("text")             
                       .attr("transform",
@@ -3869,20 +3902,101 @@
                     .text("Number of Startups");   
 
                 } else {
-                    var parseDate = d3.timeParse("%Y");
-                    var maxVal = d3.max(bar_data, function(d) {
+
+                    var yearHist = []
+                    var years = []
+                    bar_data.forEach(function(v) {
+                      if (years.indexOf(+v.Year) < 0) {
+                        var yearVal = +v.Year
+                        yearHist.push({'Year': yearVal, 'startups': 0})
+                        years.push(+v.Year)
+                      } 
+                    })
+
+                    bar_data.forEach(function(v) {
+                      yearHist.forEach(function(w) {
+                        if (+v.Year === w.Year) {
+                          w.startups += 1
+                        }
+                      })
+                    })
+                    yearHist = yearHist.sort((a, b) => (a.Year > b.Year) ? 1 : -1)
+                    console.log(yearHist)
+                    //var parseDate = d3.timeParse("%Y");
+                    /* var maxVal = d3.max(bar_data, function(d) {
                         return parseDate(d.Year)
                     })
 
                     var minVal = d3.min(bar_data, function(d) {
                         return parseDate(d.Year)
-                    })
+                    }) */
 
-                    
+                    var maxVal = d3.max(yearHist, function(d) {
+                      return d.startups
+                  })
 
-                    var x = d3.scaleTime()
+                  var x = d3.scaleBand()
+                  .domain(yearHist.map(function(d) {
+                      return d.Year
+                  }))
+                  .range([50, bar_width-50])
+                  .paddingInner(0.25);
+
+                  var colorScale = d3.scaleOrdinal().domain(x.domain())
+                  .range(["#5FBDFB", "#EA3B66", "#F5D932",
+                  "#083D77", "#EA2B1F", "#995D81", "#1D8A99", "#F3A712", "#136F63",
+                  "#9368B7", "#9BC53D", "#122C34"])
+
+                  var y = d3.scaleLinear()
+                  .range([bar_height-50, 50])
+                  .domain([0, maxVal]);
+
+                  barSVG.append("g")
+                  .attr("transform", "translate(50,0)")
+                  .call(d3.axisLeft(y).ticks(maxVal).tickSize(-bar_width+100));
+
+                  var bars = barSVG.selectAll(".bar")
+                  .data(yearHist)
+                  .enter().append("rect")
+                  .attr("class", "bar")
+                  .attr("fill", function(d) {
+                    return colorScale(d.Year)
+                  })
+                  .attr("x", function(d) { return x(d.Year); })
+                  .attr("width", x.bandwidth())
+                  .attr("y", bar_height - 50)
+                  //.attr("height", function(d) { return bar_height -50 - y(+d.startups); });
+                  .attr("height", 0)
+
+                  bars.transition()
+                    .duration(1500)
+                    .attr("height", function(d) { return bar_height -50 - y(+d.startups); })
+                    .attr("y", function(d) { return y(+d.startups); })
+
+
+
+                  barSVG.append("g")
+                  .attr("transform", "translate(0," + (bar_height-50) + ")")
+                  .call(d3.axisBottom(x).ticks(yearHist.length));
+
+                  barSVG.append("text")             
+                  .attr("transform",
+                    "translate(" + (bar_width/2) + " ," + 
+                       (bar_height-50 + 26) + ")")
+                .attr("class", "bar-axis-label")
+                .text("Year Founded");
+
+                barSVG.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 12)
+                .attr("x",0 - ((bar_height-10) / 2))
+                .attr("dy", "1em")
+                .attr("class", "bar-axis-label")
+                .text("Number of Startups");   
+
+                    /* var x = d3.scaleTime()
                         .domain([minVal, maxVal])
-                        .rangeRound([50, bar_width-50]);
+                        .rangeRound([50, bar_width-50])
 
                     var y = d3.scaleLinear()
                         .range([bar_height-50, 50]);
@@ -3891,11 +4005,9 @@
                         .value(function(d) { 
                             return parseDate(d.Year)})
                         .domain(x.domain())
-                        .thresholds(x.ticks(d3.timeYear));
+                        .thresholds(x.ticks(d3.timeYear))
 
                         var bins = histogram(bar_data);
-
-                        console.log(bins)
 
                         var maxLength = d3.max(bins, function(v) {
                             return v.length
@@ -3910,26 +4022,26 @@
 
                         y.domain([0, d3.max(bins, function(d) { return d.length; })]);
 
+                        barSVG.append("g")
+                        .attr("transform", "translate(50,0)")
+                        .call(d3.axisLeft(y).ticks(maxLength).tickSize(-bar_width));
+
                         barSVG.selectAll("rect")
                         .data(bins)
                       .enter().append("rect")
                         .attr("class", "bar")
                         .attr("x", 1)
-                        .attr("transform", function(d) {
+                        .attr("transform", function(d, i) {
                             return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
                         .attr("width", function(d) { return x(d.x1) - x(d.x0)  ; })
                         .attr("height", function(d) { return bar_height-50 - y(d.length); })
                         .attr("fill", "#f1f1f1")
-                        .attr("stroke", "#36363c")
-                        .attr("stroke-width", "2px")
 
                         barSVG.append("g")
                         .attr("transform", "translate(0," + (bar_height-50) + ")")
                         .call(d3.axisBottom(x).ticks(xTicks));
 
-                        barSVG.append("g")
-                        .attr("transform", "translate(50,0)")
-                        .call(d3.axisLeft(y).ticks(maxLength));
+
 
                         barSVG.append("text")             
                         .attr("transform",
@@ -3944,7 +4056,7 @@
                       .attr("x",0 - ((bar_height-10) / 2))
                       .attr("dy", "1em")
                       .attr("class", "bar-axis-label")
-                      .text("Number of Startups");  
+                      .text("Number of Startups");  */
 
                     /* var barX = d3.scaleBand()
                     .domain(bar_data.map(function(d) {
@@ -4198,18 +4310,18 @@
               descFormatted = text_wrap(segmentDesc);
               hoverSVG
                 .append("rect")
-                .attr("width", 200)
-                .attr("height", height)
+                .attr("width", 240)
+                .attr("height", 300)
                 .attr("fill", "white")
-                .attr("x", -100)
-                .attr("y", -height / 2)
+                .attr("x", -120)
+                .attr("y", -300 / 2)
                 .attr("id", "hover-svg-background" + clicked)
                 .attr("class", "hover-svg-background" + clicked);
               hoverSVG
                 .append("text")
                 .attr("id", "label-mouse-over-text" + clicked)
                 .attr("class", "hover-svg-background" + clicked)
-                .attr("y", -5)
+                .attr("y", -120)
                 .html(function() {
                   var x = 0;
                   var numberOfStartups = 0;
@@ -4964,6 +5076,7 @@
             d3.select("#map-toggle-btn").on("click", function() {
                 d3.select("#map-toggle-btn").attr("class", "left-sidebar-btn active")
                 d3.select("#radar-toggle-btn").attr("class", "left-sidebar-btn")
+                d3.select("body").style("background-color", "#CBCBCB")
 
               toggle_map("on")
             })
