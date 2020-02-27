@@ -828,8 +828,8 @@
   }
 
   .svg-container {
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 320px;
     margin: auto;
     margin-bottom: 30px;
   }
@@ -1241,7 +1241,7 @@
       <div class="left-sidebar-header">
         <img src="assets/logo-.png">
       </div>
-      <div class="compass-title">FLSRadarV3</div>
+
       <div class="left-sidebar-buttons">
         <div id="radar-toggle-btn" class="left-sidebar-btn">
         <div class="left-sidebar-btn-label">Radar</div>
@@ -1389,7 +1389,7 @@
         var chartTitle = chartSVG
           .append("text")
           .attr("class", "chart-title")
-          .text("FLSmidth Disruption Mapping Radar")
+          .text("FLSmidth Technology Radar")
           .attr("y", (-height * 4.55) / 10);
   
         var leftProjection = d3
@@ -1565,12 +1565,12 @@
                           d3
                             .select(selection)
                             .node()
-                            .getBoundingClientRect().width
+                            .getBoundingClientRect().width + 40
                         var tmp_height =
                           d3
                             .select(selection)
                             .node()
-                            .getBoundingClientRect().height
+                            .getBoundingClientRect().height + 40
         
                         var tmp_svg = d3
                           .select(".svg-container")
@@ -1579,27 +1579,27 @@
                           .attr("height", tmp_height);
 
                           if (i === 0) {
-                            var hor = tmp_width - 260
+                            var hor = tmp_width - 310
                             var ver = tmp_height + 25;
                           }
                           if (i === 1) {
-                            var hor = tmp_width - 300;
-                            var ver = tmp_height - 150;
+                            var hor = tmp_width - 370;
+                            var ver = tmp_height - 175;
                           }
                           if (i === 2) {
-                            var hor = tmp_width - 260;
-                            var ver = tmp_height - 300;
+                            var hor = tmp_width - 290;
+                            var ver = tmp_height - 340;
                           }
                           if (i === 3) {
-                            var hor = tmp_width - 0;
-                            var ver = tmp_height - 300;
+                            var hor = tmp_width - 15;
+                            var ver = tmp_height - 330;
                           }
                           if (i === 4) {
                             var hor = tmp_width + 45;
-                            var ver = tmp_height - 150;
+                            var ver = tmp_height - 170;
                           }
                           if (i === 5) {
-                            var hor = tmp_width - 0;
+                            var hor = tmp_width - 15;
                             var ver = tmp_height + 25;
                           }
 
@@ -1695,6 +1695,94 @@
                                 .attr("fill", "#f4f4f4");
                             });
                           }
+
+                                            var tmpSegmentsLabelBand = tmp_chartSVG
+                    .selectAll("path.segment-band")
+                    .data([chartPieData[i]])
+                    .enter()
+                    .append("path")
+                    .classed("segment-band", true)
+                    .attr("d", segmentLabelBandArc)
+                    .attr("fill", "#82ADBD")
+  
+                  var tmpLabels = tmp_chartSVG
+                    .append("g")
+                    .classed("labels", true);
+
+                  var tmpLabelsOther = tmp_chartSVG
+                    .append("g")
+                    .classed("labels", true);
+  
+                  tmpLabels
+                    .append("def")
+                    .append("path")
+                    .attr("id", "label-path")
+                    .attr(
+                      "d",
+                      "m0 " +
+                        -labelRadius +
+                        " a" +
+                        labelRadius +
+                        " " +
+                        labelRadius +
+                        " 0 1,1 -0.01 0"
+                    );
+  
+                  tmpLabelsOther
+                    .append("def")
+                    .append("path")
+                    .attr("id", "label-other-path")
+                    .attr(
+                      "d",
+                      "m0 " +
+                        -labelOtherRadius +
+                        " a" +
+                        labelOtherRadius +
+                        " " +
+                        labelOtherRadius +
+                        " 0 1,1 -0.01 0"
+                    );
+  
+                  tmpLabels
+                    .selectAll("text")
+                    .data([chartPieData[i]])
+                    .enter()
+                    .append("text")
+                    .attr("class", "label-text")
+                    .append("textPath")
+                    .attr("xlink:href", "#label-path")
+                    .attr("startOffset", function(d, i) {
+                      var percentage =
+                        ((d.endAngle - d.startAngle) / 2 + d.startAngle) /
+                        0.0628319;
+                      return percentage + "%";
+                    })
+                    .text(function(d) {
+                      return label_wrap(d.data.value.key.toUpperCase())[0];
+                    });
+  
+                  tmpLabelsOther
+                    .selectAll("text")
+                    .data([chartPieData[i]])
+                    .enter()
+                    .append("text")
+                    .attr("class", "label-text")
+                    .append("textPath")
+                    .attr("xlink:href", "#label-other-path")
+                    .attr("startOffset", function(d, i) {
+                      var percentage =
+                        ((d.endAngle - d.startAngle) / 2 + d.startAngle) /
+                        0.0628319;
+                      return percentage + "%";
+                    })
+                    .text(function(d) {
+                      var result = label_wrap(d.data.value.key.toUpperCase());
+                      if (result.length > 2) {
+                        return result[1] + " " + result[2];
+                      } else {
+                        return result[1];
+                      }
+                    });
 
                           var tmp_nodes = tmp_chartSVG
                           .selectAll("nodes")
@@ -1820,7 +1908,7 @@
                   d3.select(".opportunity-space-description").html(popup_data[0]["Opportunity Space Description"])
                   d3.select("#total-no-startups").html(numStartups)
                   d3.select("#total-avg-funding").html("$" + formatFunding(funding_amount) + ", $" + formatFunding(avgFunding))
-                  d3.select("#avg-funding-year").html(avgYear + ", " + maturityMode)
+                  d3.select("#avg-funding-year").html(avgYear + ", " + maturityMode[0] )
                   d3.select("#most-active-competitor").html(popup_data[0]["Most Active Competitor"])
                   d3.select("#most-pop-tech").html(popup_data[0]["Popular Technology + Business Model"])
                   d3.select("#pattern-recognized").html(popup_data[0]["Pattern Recognised"])
@@ -2058,7 +2146,6 @@
                   d["Opportunity Space"] ===
                   v["Opportunity Space"].toLowerCase().replace(/\//g, "_")
                 ) {
-
                   d["Themes"] = v["Themes"];
                   d["Theme Definition"] = v["Theme Definition"];
                   d["Opportunity Space Description"] = v["Description"]
@@ -4718,53 +4805,29 @@
                     .attr("height", tmp_height);
   
                     if (i === 0) {
-                        var hor = tmp_width - 200;
+                        var hor = tmp_width - 300;
                         var ver = tmp_height - 0;
                       }
-                      if (i === 1) {
-                        var hor = tmp_width - 300;
-                        var ver = tmp_height - 25;
-                      }
-                      if (i === 2) {
-                        var hor = tmp_width - 350;
-                        var ver = tmp_height - 50;
-                      }
-                      if (i === 3) {
-                        var hor = tmp_width - 350;
-                        var ver = tmp_height - 200;
-                      }
-                      if (i === 4) {
-                        var hor = tmp_width - 300;
-                        var ver = tmp_height - 325;
-                      }
-                      if (i === 5) {
-                        var hor = tmp_width - 200;
-                        var ver = tmp_height - 375;
-                      }
-                      if (i === 6) {
-                        var hor = tmp_width - 75;
-                        var ver = tmp_height - 375;
-                      }
-                      if (i === 7) {
-                        var hor = tmp_width - 25;
-                        var ver = tmp_height - 325;
-                      }
-                      if (i === 8) {
-                        var hor = tmp_width - 0;
-                        var ver = tmp_height - 200;
-                      }
-                      if (i === 9) {
-                        var hor = tmp_width - 25;
-                        var ver = tmp_height - 75;
-                      }
-                      if (i === 10) {
-                        var hor = tmp_width - 25;
-                        var ver = tmp_height - 25;
-                      }
-                      if (i === 11) {
-                        var hor = tmp_width - 25;
-                        var ver = tmp_height - 25;
-                      }
+                          if (i === 1) {
+                            var hor = tmp_width - 370;
+                            var ver = tmp_height - 195;
+                          }
+                          if (i === 2) {
+                            var hor = tmp_width - 310;
+                            var ver = tmp_height - 370;
+                          }
+                          if (i === 3) {
+                            var hor = tmp_width - 45;
+                            var ver = tmp_height - 360;
+                          }
+                          if (i === 4) {
+                            var hor = tmp_width + 15;
+                            var ver = tmp_height - 200;
+                          }
+                          if (i === 5) {
+                            var hor = tmp_width - 45;
+                            var ver = tmp_height - 5;
+                          }
   
                   var tmp_chartSVG = tmp_svg
                     .append("g")
@@ -4865,9 +4928,7 @@
                     .append("path")
                     .classed("segment-band", true)
                     .attr("d", segmentLabelBandArc)
-                    .attr("fill", function(d) {
-                      return focusAreaeBandColorScale(d.data.value.key);
-                    });
+                    .attr("fill", "#82ADBD")
   
                   var tmpLabels = tmp_chartSVG
                     .append("g")
