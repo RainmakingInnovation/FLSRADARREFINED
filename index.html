@@ -1491,13 +1491,13 @@
         ];
   
         d3.csv(
-          "https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1229685170&single=true&output=csv"
+          "EduardoData - FLSRADARV3.csv"
         ).then(function(data) {
           d3.csv(
-            "https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1031411244&single=true&output=csv"
+            "EduardoData - FLSRADARV3-Definitions.csv"
           ).then(function(desc) {
 
-            d3.csv("https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vSafGm_gSEK_M6dTEcS3sd2N7CcehHPfg561BJtgzrHClIt5DH79yqHI1LpeOLbbwGob_Xi0kVUdxMB/pub?gid=1007750529&single=true&output=csv"
+            d3.csv("EduardoData - FLSRADARV3-Hero Startups.csv"
             ).then(function(hero_data) { 
   
                 spinner.stop();
